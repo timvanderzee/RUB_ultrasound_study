@@ -62,3 +62,9 @@ for j = 1:2
     yline(0,'k--'); yline(10,'k--'); yline(20,'k--')
     xlabel('Time (s)'); ylabel('Torque (%MVC)'); title('Relative torque'); box off; xlim([0 82])
 end
+
+%% save figures
+for i = 1:3
+    figure(i); 
+    saveas(gcf, ['fig',num2str(i)], 'fig')
+end
