@@ -1,0 +1,1 @@
+used 0.065 mmperPix instead of actual (0.0887 mmperPix)

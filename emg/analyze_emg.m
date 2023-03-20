@@ -38,8 +38,19 @@ figure(i+6); plotEMG(tnew, EMG.TA , TArel, color(j,:))
 yline(0,'k--'); yline(50,'k--');
 set(gcf,'name','TA')
 
+mMGrel(j,i) = mean(MGrel(:),'omitnan');
+mLGrel(j,i) = mean(LGrel(:),'omitnan');
+mTArel(j,i) = mean(TArel(:),'omitnan');
+mSOrel(j,i) = mean(SOrel(:),'omitnan');
+
 end
 end
+
+mCalfrel = mean([mMGrel mLGrel mSOrel],'all')
+sCalfrel = std([mMGrel mLGrel mSOrel],[],'all')
+
+mDorsrel = mean(mTArel,'all')
+sDorsrel = std(mTArel,[],'all')
 
 
 %% sine conditions
