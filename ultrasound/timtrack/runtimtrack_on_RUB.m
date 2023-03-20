@@ -2,7 +2,8 @@ clear all; close all; clc
 addpath(genpath('C:\Users\timvd\Documents\ultrasound-automated-algorithm'))
 
 dates = {'3011', '1612','1601'};
-for i = 2:3
+dates = {'1312'};
+for i = 1
 date = dates{i};
 
 cd(['C:\Users\timvd\OneDrive - University of Calgary\8. Ultrasound comparison - TBD\data\Test',date,'\videos']);
@@ -18,6 +19,8 @@ load('parms.mat')
 % parms.cut_image = 0;
 
 parms.ROI = [239   936; 50   500]; % [0812]
+parms.extrapolation = 1;
+parms.fas.thetares = .5;
 
 parms.apo.deep.cut(1) = .35;
 parms.apo.super.cut(1) = .03;
@@ -28,8 +31,8 @@ parms.apo.super.cut(1) = .03;
 
 %%
 k = 0;
-parms.show = 0;
-parms.fas.show = 0;
+parms.show = 1;
+parms.fas.show = 1;
 
 for j = 1 %2:length(files)
     clear geofeatures
@@ -58,10 +61,12 @@ for j = 1 %2:length(files)
 
         [geofeatures(k), ~, parms] = auto_ultrasound(Icut,parms);
         
-        cd(['C:\Users\timvd\Documents\RUB_ultrasound_study\ultrasound\timtrack\individual_subjects\', date])
-        save([filename(1:end-7), '_geofeatures_Test',date,'.mat'], 'geofeatures','parms')
     %     profile viewer
     end
+    
+%     cd(['C:\Users\timvd\Documents\RUB_ultrasound_study\ultrasound\timtrack\individual_subjects\', date])
+%     save([filename(1:end-7), '_geofeatures_Test',date,'.mat'], 'geofeatures','parms')
+    
 end
 end
 
