@@ -1,54 +1,93 @@
 clear all; close all; clc
-addpath(genpath('C:\Users\timvd\Documents\ultrasound-automated-algorithm'))
+datafolder = 'C:\Users\timvd\OneDrive - University of Calgary\8. Ultrasound comparison - TBD\data\';
+codefolder = 'C:\Users\timvd\Documents\ultrasound-automated-algorithm\';
 
-dates = {'3011', '1612','1601'};
-dates = {'1312'};
-for i = 1
-date = dates{i};
+addpath(genpath(codefolder))
+filename = 'sine_020';
 
-cd(['C:\Users\timvd\OneDrive - University of Calgary\8. Ultrasound comparison - TBD\data\Test',date,'\videos']);
-files = dir('*.mp4');
-
-%%
-filename = files(1).name;
-v = VideoReader(filename);
-f = readFrame(v);
-I = rgb2gray(f);
-% 
+% TimTrack parameters
 load('parms.mat')
 % parms.cut_image = 0;
 
-parms.ROI = [239   936; 50   500]; % [0812]
-parms.extrapolation = 1;
+parms.ROI = [239   936; 50   608]; % [0812]
+parms.extrapolation = 0;
 parms.fas.thetares = .5;
 
 parms.apo.deep.cut(1) = .35;
 parms.apo.super.cut(1) = .03;
 
-% figure(1)
-[geofeatures, parms] = do_TimTrack(I,parms);
+
+%% get folder names
+folder = dir(datafolder);
+
+for i = 1:(length(folder)-2)
+    foldernames{i} = folder(i+2).name;
+end
 
 
-%%
-k = 0;
+%% first frame: test settings
 parms.show = 1;
 parms.fas.show = 1;
+parms.redo_ROI = 0;
 
-for j = 1 %2:length(files)
-    clear geofeatures
+for i = 1:length(foldernames)
+    cd([datafolder,foldernames{i},'\videos'])
     
-    cd(['C:\Users\timvd\OneDrive - University of Calgary\8. Ultrasound comparison - TBD\data\Test',date,'\videos']);
-    filename = files(j).name;
-    disp(filename)
+    if exist([filename,'_02.mp4'])
+        fullfilename = [filename,'_02.mp4'];
+    else
+        fullfilename = [filename,'_01.mp4'];
+    end
+
+ 
+    v = VideoReader(fullfilename);
+    f = readFrame(v);
+
+    I = rgb2gray(f);
     
+    if i == 5 || i == 6 || i == 7
+       ROI(:,:,i) = [1 size(I,2); 1 size(I,1)];
+    else
+       ROI(:,:,i) = [239   936; 44   608];
+    end
+    
+    if i == 7 
+        ROI(2,end,i) = 608;
+    else
+        ROI(2,end,i) = 500;
+    end
+    
+    parms.ROI = ROI(:,:,i);
+
+    %profile on
+    Icut = I(parms.ROI(2,1):parms.ROI(2,2), parms.ROI(1,1):parms.ROI(1,2));
+
+    subplot(4,2,i)
+    [geofeatures, ~, parms] = auto_ultrasound(Icut,parms);
+end
+
+%% all frames
+parms.show = 0;
+parms.fas.show = 0;
+parms.redo_ROI = 0;
+
+for i = 8 %1:(length(foldernames)-1)
+    cd([datafolder,foldernames{i},'\videos'])
+    
+    if exist([filename,'_02.mp4'])
+        fullfilename = [filename,'_02.mp4'];
+    else
+        fullfilename = [filename,'_01.mp4'];
+    end
+    
+    parms.ROI = ROI(:,:,i);
+
     % read video
-    v = VideoReader(filename);
+    v = VideoReader(fullfilename);
     k = 0;
-    
+
+    clear geofeatures
     while hasFrame(v)
-%         for i = 1:9
-%             f = readFrame(v);
-%         end
 
         k = k+1;
         disp(k)
@@ -56,18 +95,14 @@ for j = 1 %2:length(files)
         f = readFrame(v);
         I = rgb2gray(f);
 
-        %profile on
         Icut = I(parms.ROI(2,1):parms.ROI(2,2), parms.ROI(1,1):parms.ROI(1,2));
 
         [geofeatures(k), ~, parms] = auto_ultrasound(Icut,parms);
-        
-    %     profile viewer
+
     end
-    
-%     cd(['C:\Users\timvd\Documents\RUB_ultrasound_study\ultrasound\timtrack\individual_subjects\', date])
-%     save([filename(1:end-7), '_geofeatures_Test',date,'.mat'], 'geofeatures','parms')
-    
-end
+
+    cd(['C:\Users\timvd\Documents\RUB_ultrasound_study\ultrasound\timtrack\individual_subjects\', foldernames{i}(5:end)])
+    save([filename, '_timtrack_',foldernames{i},'.mat'], 'geofeatures','parms')
 end
 
 return

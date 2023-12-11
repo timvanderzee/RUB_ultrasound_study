@@ -1,5 +1,10 @@
 clear all; close all; clc
-addpath(genpath('C:\Users\timvd\Documents\ultrasound-automated-algorithm'))
+datafolder = 'C:\Users\timvd\OneDrive - University of Calgary\8. Ultrasound comparison - TBD\data\';
+TimTrackfolder = 'C:\Users\timvd\Documents\ultrasound-automated-algorithm\';
+codefolder = 'C:\Users\timvd\Documents\RUB_ultrasound_study\';
+
+addpath(genpath(TimTrackfolder))
+addpath(genpath(codefolder))
 
 dates = {'3011', '1612','1601'};
 i = 1;
@@ -11,12 +16,18 @@ date = dates{i};
 % filename = files(1).name;
 % v = VideoReader(filename);
 
-cd('C:\Users\timvd\OneDrive - University of Calgary\8. Ultrasound comparison - TBD');
-v = VideoReader('short_clip.mp4');
+%% load video
+cd([datafolder, 'Test', dates{i},'\videos']);
+% v = VideoReader('short_clip.mp4');
+vidname = 'sine_020';
+v = VideoReader([vidname,'_01.mp4']);
+
+tic
 Is = read(v);
+toc
 % v = read('short_clip.mp4');
 
-%% do TimTrack
+%% do or load TimTrack
 load('parms.mat')
 % parms.cut_image = 0;
 % 
@@ -31,8 +42,10 @@ j = 0;
 
 % [geofeatures, parms] = do_TimTrack('short_clip.mp4',parms);
 
-load('short_clip_geofeatures.mat')
-% load(['asym_high_geofeatures_Test',date,'.mat'])
+% load('short_clip_geofeatures.mat')
+
+cd([codefolder, 'ultrasound\timtrack\individual_subjects\', date])
+load([vidname,'_timtrack_',date,'.mat'])
 apox = [1 size(Is,2)];
 
 %% convert TimTrack to x,y points
@@ -44,11 +57,17 @@ for j = 1:length(geofeatures)
     dapo_tt(:,j) = polyval(geofeatures(j).deep_coef,apox,1)';
 end
 
+%% cut video
+parms.ROI = [239   936; 50   500]; % [0812]
+Icut = Is(parms.ROI(2,1):parms.ROI(2,2), parms.ROI(1,1):parms.ROI(1,2),:,:);
+
 %% TimTrack video
-show_video(Is, xpos_tt, ypos_tt, dapo_tt, sapo_tt,'timtrack_video.gif')
+cd([datafolder, 'Test', dates{i},'\videos']);
+show_video(Icut, xpos_tt, ypos_tt, dapo_tt, sapo_tt,[vidname,'timtrack_video.gif'])
 
 %% optic flow
 if ishandle(2), close(2); end; figure(2);
+Is = Icut;
 
 % fascicle intersection horizontal and vertical positions
 xpos = geofeatures(1).apo_intersect(:,1);
@@ -95,6 +114,7 @@ for j = 1:size(Is,4)
 
         [pointsNew, isFound] = step(pointTracker, Ic);
         [w,~] = estimateGeometricTransform2D(points(isFound,:), pointsNew(isFound,:), 'affine', 'MaxDistance',50);
+        
         [xpos(:,j),ypos(:,j)] = transformPointsForward(w, xpos(:,j-1), ypos(:,j-1));
         [~,sapo(:,j)] = transformPointsForward(w, apox', sapo(:,j-1));
         [~,dapo(:,j)] = transformPointsForward(w, apox', dapo(:,j-1));
@@ -167,7 +187,7 @@ for i = 1:4
     ylabel('Position (pixels)')
 end
 
-legend('TimTrack','Optic flow','location','best')
+legend('Optic flow','TimTrack','location','best')
 legend box off
 end
 
@@ -307,12 +327,7 @@ subplot(221); plot(xpos_est(1,:)); hold on
 subplot(223); plot(ypos_est(1,:)); hold on
 
 %% evaluate results
-show_video(Is, xpos_est, ypos_est, dapo_est, sapo_est,'estimator_video.gif')
-
-%%
-
-
-
+show_video(Is, xpos_est, ypos_est, dapo_est, sapo_est,[vidname 'estimator_video.gif'])
 
 
 %% functions
