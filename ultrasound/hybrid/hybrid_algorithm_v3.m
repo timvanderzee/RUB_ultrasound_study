@@ -22,6 +22,7 @@ end
 for i = 1:length(foldernames)
     
     
+    % load TimTrack
     cd(['C:\Users\timvd\Documents\RUB_ultrasound_study\ultrasound\timtrack\individual_subjects\', foldernames{i}(5:end)])
     load([filename, '_timtrack_',foldernames{i},'.mat'], 'geofeatures','parms')
     
