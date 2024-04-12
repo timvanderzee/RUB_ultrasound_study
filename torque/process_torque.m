@@ -3,15 +3,17 @@ clear all; close all; clc
 dates = {'3011', '0812', '1312', '1612', '1601', '1701', '1901a', '1901b'};
 
 conditions = {'slow_low', 'slow_high', 'medium_low', 'medium_high', 'fast_low', 'fast_high', 'asym_low', 'asym_high', ...
-    'sine_020', 'sine_1020'};
+    'sine_020', 'sine_1020','pass};
 
 torque = nan(8, 8201);
+angle = nan(8,8201);
 
-j = 10;
+j = 1;
+mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\data\Test';
 
 for i = 1:length(dates)
 
-cd(['D:\Test', dates{i}])
+cd([mainfolder, dates{i},'\MAT data'])
 
 disp(i)
 
@@ -30,23 +32,31 @@ if exist([conditions{j},'_01.mat'],'file') || exist([conditions{j},'_02.mat'],'f
     fs = 2000; fc = 10;
     N = 2; Wn = fc / (.5*fs);
     [b,a] = butter(N, Wn,'low');
-    Tfilt = filtfilt(b,a,Torque.values);
+    Tfilt = filtfilt(b,a, Torque.values);
+    Afilt = filtfilt(b,a, Angle.values);
     
     % resample
     fsnew = 100; 
     tnew = 0:(1/fsnew):82;
     torque(i,:) = interp1(Torque.times, Tfilt, tnew);
+    angle(i,:) = interp1(Angle.times, Afilt, tnew);
     
     figure(1)
     subplot(4,2,i)
     plot(Torque.times, Torque.values); hold on
     plot(Torque.times, Tfilt,'--')
     plot(tnew, torque(i,:),'.')
+    
+    figure(2)
+    subplot(4,2,i)
+    plot(Angle.times, Angle.values); hold on
+    plot(Angle.times, Afilt,'--')
+    plot(tnew, angle(i,:),'.')
 
 end
 
 end
 
-% cd('C:\Users\timvd\Documents\RUB_ultrasound_study')
-save([conditions{j},'_summary.mat'],'tnew','torque')
+cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\torque_and_angle')
+% save([conditions{j},'_summary.mat'],'tnew','torque')
 
