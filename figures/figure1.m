@@ -1,5 +1,6 @@
 clear all; close all; clc
 % typical example participant, torques, angles, EMGs
+% for all trials except passive
 
 Tmax    = readmatrix('max_torques.txt');
 Trest   = readmatrix('rest_torques.txt'); 
@@ -104,16 +105,13 @@ N = 7;
 Qs = [nan, 0, 10.^(-4:0), 1000, inf];
 color = get(gca,'colororder');
 
-% mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
-mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+% mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
 subfolders = dir(mainfolder);
 
 foldernames = {'3011', '0812', '1312','1612','1601','1701','1901a','1901b'};
 filenames = {'*slow*.mp4','*medium*.mp4','*fast*.mp4','*asym*.mp4','*sine_020*.mp4','*sine_1020*.mp4'}; 
 
-% force_conditions = {'slow','medium','fast','asym','sine_020','sine_1020'};
-
-fignames = {'sine 0-20', 'sine 0-10', 'passive 5 deg/s','passive 30 deg/s','passive 120 deg/s','ramp: asymmetric','ramp: slow','ramp: medium','ramp: fast'};
 participants = foldernames;
 
 j = 1;
@@ -123,7 +121,7 @@ foldername = foldernames{j};
 
 dcolor = [.8 .8 .8; .5 .5 .5; color(1,:)];
 
-is = [length(Qs) 1 5];
+is = [length(Qs) 1 6];
 m = 0;
 for i = is
     m = m+1;

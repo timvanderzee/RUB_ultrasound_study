@@ -3,17 +3,19 @@ clear all; close all; clc
 dates = {'3011', '0812', '1312', '1612', '1601', '1701', '1901a', '1901b'};
 
 conditions = {'slow_low', 'slow_high', 'medium_low', 'medium_high', 'fast_low', 'fast_high', 'asym_low', 'asym_high', ...
-    'sine_020', 'sine_1020'};
+    'sine_020', 'sine_1020','pas_005', 'pas_30','pas_120'};
 
-datafolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\data\';
+mainfolder = 'C:\Users\timvd\';
+onedrivefolder = [mainfolder, 'OneDrive - KU Leuven\8. Ultrasound comparison - TBD\data\Test'];
+githubfolder = [mainfolder, 'Documents\RUB_ultrasound_study'];
 
-for j = 1:10
+for j = 12% 1:length(conditions)
 % 
 % EMG = struct('MG.raw', nan(8, 8201),'LG.raw', nan(8, 8201),'TA.raw', nan(8, 8201),'SO.raw', nan(8, 8201));
 
 for i = 1:length(dates)
 
-cd([datafolder, '\Test', dates{i},'\MAT data'])
+    cd([onedrivefolder, dates{i},'\MAT data'])
 disp(i)
 
 % first look for version 2, then look for version 1
@@ -72,7 +74,8 @@ end
 
 end
 
-
-cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\emg\summary_data')
+cd([githubfolder,'\emg\summary_data'])
 save([conditions{j},'_EMG.mat'],'tnew','EMG')
+disp(['Saved: ', conditions{j},'_EMG.mat']);
+
 end
