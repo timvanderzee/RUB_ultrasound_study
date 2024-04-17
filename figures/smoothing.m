@@ -1,9 +1,30 @@
 clear all; close all; clc
 
-cd('C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\3011\analyzed\mat')
-filename = 'pas_005_01_analyzed_Q=001';
+p = 2;
+Qs = [nan, 0, 10.^(-4:0), 1000, inf];
+i = 4;
+Qval = Qs(i);
+k = 3;
 
-load([filename,'.mat']);
+foldernames = {'3011', '0812', '1312','1612','1601','1701','1901a','1901b'};
+mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+filenames = {'*pas_005*.mp4','*pas_30*.mp4','*pas_120*.mp4'};
+
+% get names
+foldername = foldernames{p};
+cd([mainfolder foldername]);
+files = dir(filenames{k});
+vidname = files.name(1:end-4);
+
+filename = [vidname,'_analyzed_Q=',strrep(num2str(Qval),'.','')];
+
+cd([mainfolder foldername,'\analyzed\mat']);
+
+if exist([filename,'.mat'],'file')
+    load([filename,'.mat']);
+else
+    disp('Does not exist')
+end
 
 N = length(Fdat.Region.FL);
 
@@ -12,8 +33,10 @@ clc
 x_apriori(1) = Fdat.Region.Fascicle.alpha{1};
 x_apost(1)=  Fdat.Region.Fascicle.alpha{1};
 alpha_prev = Fdat.Region.Fascicle.alpha{1};
+xflow(1) = Fdat.Region.Fascicle.alpha{1};
+y(1) = Fdat.Region.Fascicle.alpha{1};
 
-Qval = 0.01;
+xkal(1) = Fdat.Region.Fascicle.alpha{1};
 
 P_apost = 0;
 P_apriori = P_apost;
@@ -24,23 +47,20 @@ end
 
 for i = 2:N
     
-    w = Fdat.Region.warp(:,:,i-1);
-
     fas_prev = [Fdat.Region.Fascicle.fas_x{i-1}' Fdat.Region.Fascicle.fas_y{i-1}'];
+    alpha_prev = Fdat.Region.Fascicle.alpha{i-1};
     
+    % transform
+    w = Fdat.Region.warp(:,:,i-1);
     fas_new = transformPointsForward(w, fas_prev);
-    
-    alpha_prev = X(i-1);
     
     % Estimate the change in fascicle angle from the change in points
     dalpha = abs(atan2d(diff(fas_new(:,2)), diff(fas_new(:,1)))) - abs(atan2d(diff(fas_prev(:,2)), diff(fas_prev(:,1))));
-    alpha_new = alpha_prev + dalpha;
-
-    x_apriori(i) = alpha_new;
-
-    % A priori state estimate
-    x_minus = alpha_new;
-
+    
+    % a priori state estimate
+    x_minus = alpha_prev + dalpha;
+    
+    % estimate covariances
     dx = abs(dalpha);
     dx(dx<0.005) = 0;
     f.Q = getQ(Qval, dx);
@@ -65,48 +85,110 @@ for i = 2:N
     Kgain(i) = F.K;
     P_apost(i) = F.P_plus;
     
+    xflow(i) = xflow(i-1) + dalpha;
+    x_apriori(i) = x_minus;
+    
     x_apost(i) = alpha;
     y(i) = Fdat.geofeatures(i).alpha;
 end
 
-%%
-close all
-figure(1)
-plot(x_apriori); hold on
-plot(x_apost)
-plot(X,'--')
-plot(y)
 
-legend('apriori','aposteriori','X','y','location','best')
-legend boxoff
-
-%%
-figure(2)
-plot(Kgain); hold on
-plot(Fdat.Region.Fascicle.K,'--')
 %% smoothing
-
 xsmooth = nan(1,N);
 xsmooth(N) = Fdat.Region.Fascicle.alpha{N};
 xnew(N) = Fdat.Region.Fascicle.alpha{N};
 
 for i = (N-1):-1:1
-    xprev = Fdat.Region.Fascicle.alpha{i+1};
+%     xprev = x_apost(i);
+    xprev = x_apriori(i+1);
     xnew(i) = Fdat.Region.Fascicle.alpha{i};
     
     Pprev = Fdat.Region.Fascicle.fas_p{i+1}(2);
     Pnew = Fdat.Region.Fascicle.fas_p{i}(2);
     
-    C(i) = Pnew / Pprev;
+    Pprev = P_apriori(i+1);
+    Pnew = P_apost(i);
     
-    xsmooth(i) = xnew(i) + C(i) * (xsmooth(i+1) - xprev);
+    C(i) = Pnew / Pprev;
+%     C(C>1) = 1;
+%     C(i) = 1;
+    xsmooth(i) = x_apost(i) + C(i) * (xsmooth(i+1) - xprev);
 end
 
+%%
+close all
 figure(1)
-plot(xnew); hold on
+
+subplot(2,4,1:4);
+plot(x_apriori); hold on
+plot(x_apost)
+plot(X,'--')
+plot(y)
 plot(xsmooth,'--')
+plot(xflow,':')
+
+legend('apriori','aposteriori','X','y','xsmooth','xflow','location','best')
+legend boxoff
+
+% subplot(312)
+% plot(C)
 
 
+%% plot vs angle
+% passive trials
+
+Tmax    = readmatrix('max_torques.txt');
+Trest   = readmatrix('rest_torques.txt'); 
+
+load('RampTarget.mat','tnew','rampTarget')
+load('MVC_EMG.mat');
+
+%% time series
+force_conditions = {'pas_005', 'pas_30','pas_120'};
+
+fs = 100;
+Wn = 10 / (.5*fs);
+[b,a] = butter(2, Wn);
+
+% n = 8201;
+n = N;
+
+
+% angle_rs = nan(n, 8, 3);
+
+    
+% load
+load([force_conditions{k},'_summary.mat'])
+tus = 0:.03:max(tnew);
+
+% down-sample
+angle_rs = interp1(tnew, angle(p,:)', tus);
+
+
+
+%%
+
+
+N = min([length(X) length(angle_rs)]);
+
+pen = [X(1:N); x_apost(1:N); xsmooth(1:N); xflow(1:N)];
+titles = {'Original','a posteriori', 'smooth', 'flow'};
+
+% figure(p+10)
+
+for m = 1:size(pen,1)
+
+    subplot(2,4,m+4)
+   plot(angle_rs(1:N), pen(m,1:N),'.'); hold on
+   title(titles{m})
+%        ylim([15 30])
+
+end
+
+
+
+
+%%
 function [K] = run_kalman_filter(k)
 % this assumes we already have the aposteriori state estimate (k.x_minus),
 % the measurement (k.y) and the process- and measurement noise covariances (k.R and k.Qvalue)

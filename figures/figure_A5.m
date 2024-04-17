@@ -1,6 +1,6 @@
 clear all; close all; clc
 % typical example participant, torques, angles, EMGs
-% for all trials except passive
+% for passive trials
 
 Tmax    = readmatrix('max_torques.txt');
 Trest   = readmatrix('rest_torques.txt'); 
@@ -9,13 +9,10 @@ load('RampTarget.mat','tnew','rampTarget')
 load('MVC_EMG.mat');
 
 %% time series
-force_conditions = {'slow','medium','fast','asym','sine_020','sine_1020'};
-image_qualities = {'low', 'high'};
-
+force_conditions = {'pas_005', 'pas_30','pas_120'};
 p = 1;
-i = 2;
 
-titles = {'Slow ramp', 'Medium ramp', 'Fast ramp', 'Asymmetric ramp', '0-20 %MVC sine','10-20 %MVC sine'};
+titles = {'Slow passive', 'Medium passive', 'Fast passive'};
 
 close all
 
@@ -26,10 +23,10 @@ N = 7;
 for j = 1:length(force_conditions)
     
 % load
-load([force_conditions{j},'_',image_qualities{i},'_summary.mat'])
+load([force_conditions{j},'_summary.mat'])
 
 % load
-load([force_conditions{j},'_',image_qualities{i},'_EMG.mat'])
+load([force_conditions{j},'_EMG.mat'])
 
 % subtract rest torque, divide by MVC torque, multiply by 100%
 MGrel = EMG.MG.raw ./ max(MVC.MG,[],2) * 100;
@@ -49,10 +46,9 @@ t = tnew - 1;
 
 % subplot(length(force_conditions)*2,1,j*2-1);
 subplot(N, length(force_conditions), j)
-plot(t, torque(p,:)-Trest(p),'linewidth',2); hold on
+plot(t, angle(p,:),'linewidth',2); hold on
 box off; 
-xlim([40 50])
-ylim([-5 120])
+% ylim([-5 120])
 
 title(titles{j})
 
@@ -61,44 +57,33 @@ subplot(N, length(force_conditions), j+length(force_conditions))
 plot(t, MGrel(p,:),'linewidth',2,'color',[.5 .5 .5]); hold on
 plot(t, MGrel_filt(p,:),'linewidth',2,'color',color(1,:)); hold on
 box off; 
-xlim([40 50])
 ylim([-200 200])
 
 subplot(N, length(force_conditions), j+length(force_conditions)*2)
 plot(t, LGrel(p,:),'linewidth',2,'color',[.5 .5 .5]); hold on
 plot(t, LGrel_filt(p,:),'linewidth',2,'color',color(1,:)); hold on
 box off; 
-xlim([40 50])
 ylim([-200 200])
 
 subplot(N, length(force_conditions), j+length(force_conditions)*3)
 plot(t, SOrel(p,:),'linewidth',2,'color',[.5 .5 .5]); hold on
 plot(t, SOrel_filt(p,:),'linewidth',2,'color', color(1,:)); hold on
 box off; 
-xlim([40 50])
 ylim([-200 200])
 
 subplot(N, length(force_conditions), j+length(force_conditions)*4)
 plot(t, TArel(p,:),'linewidth',2,'color',[.5 .5 .5]); hold on
 plot(t, TArel_filt(p,:),'linewidth',2,'color',color(1,:)); hold on
 box off; 
-xlim([40 50])
 ylim([-200 200])
 
 end
 
 %%
-% set(gcf,'units','normalized','position',[.2 0 .2 .9])
-figure(1)
-set(gcf,'units','normalized','position',[0 0 1 .99])
-
-subplot(N,6,1); ylabel('Torque (N-m)')
-subplot(N,6,7); ylabel('MG (%MVC)')
-subplot(N,6,13); ylabel('LG (%MVC)')
-subplot(N,6,19); ylabel('SOL (%MVC)')
-subplot(N,6,25); ylabel('TA (%MVC)')
-subplot(N,6,31); ylabel('Pennation (deg)')
-subplot(N,6,37); ylabel('Length (mm)')
+for i = 1:(length(force_conditions)*N)
+    subplot(N, length(force_conditions), i);
+    xlim([0 15])
+end
 
 %% add ultrasound
 N = 7;
@@ -110,7 +95,7 @@ mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD
 subfolders = dir(mainfolder);
 
 foldernames = {'3011', '0812', '1312','1612','1601','1701','1901a','1901b'};
-filenames = {'*slow*.mp4','*medium*.mp4','*fast*.mp4','*asym*.mp4','*sine_020*.mp4','*sine_1020*.mp4'}; 
+filenames = {'*pas_005*.mp4','*pas_30*.mp4','*pas_120*.mp4'};
 
 participants = foldernames;
 
@@ -121,10 +106,11 @@ foldername = foldernames{j};
 
 dcolor = [.8 .8 .8; .5 .5 .5; color(1,:)];
 
-is = [length(Qs) 1 6];
+is = [length(Qs) 1 5];
 m = 0;
 for i = is
     m = m+1;
+    
 for k = 1:length(filenames)
     cd([mainfolder foldername]);
     files = dir(filenames{k});
@@ -134,22 +120,21 @@ for k = 1:length(filenames)
 
     cd([mainfolder foldername,'\analyzed\mat']);
 
-    if exist([filename,'.mat'],'file')
-        load([filename,'.mat']);
+    if exist([filename,'_v2.mat'],'file')
+        load([filename,'_v2.mat']);
         
         % recreate t
-        t = 0:.03:((2667-1)*.03);
-
+%         t = 0:.03:((2667-1)*.03);
+        n = length(Fdat.Region.PEN);
+        t = 0:.03:((n-1)*.03);
         subplot(N, length(force_conditions), k+length(force_conditions)*5)
         plot(t,Fdat.Region.PEN*180/pi,'color',dcolor(m,:),'linewidth',2); hold on
-        xlim([40 50])
         ylim([10 40])
         box off
 
         subplot(N, length(force_conditions), k+length(force_conditions)*6)  
         plot(t,Fdat.Region.FL,'color',dcolor(m,:),'linewidth',2); hold on
-        xlim([40 50])
-        ylim([50 100])
+        ylim([30 70])
         box off
         xlabel('Time (s)')
     end
@@ -159,7 +144,19 @@ end
 end
 
 %%
-for i = 1:42
+for i = 1:(length(force_conditions)*N)
     subplot(N, length(force_conditions), i);
-    xlim([0 8])
+    xlim([2 12])
 end
+
+figure(1)
+set(gcf,'units','normalized','position',[0 0 .4 .99])
+
+subplot(N,3,1); ylabel('Angle (deg)')
+subplot(N,3,4); ylabel('MG (%MVC)')
+subplot(N,3,7); ylabel('LG (%MVC)')
+subplot(N,3,10); ylabel('SOL (%MVC)')
+subplot(N,3,13); ylabel('TA (%MVC)')
+subplot(N,3,16); ylabel('Pennation (deg)')
+subplot(N,3,19); ylabel('Length (mm)')
+

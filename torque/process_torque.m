@@ -21,7 +21,9 @@ for i = 1:length(dates)
     disp(i)
 
     % first look for version 2, then look for version 1
-    if exist([conditions{j},'_02.mat'],'file')
+    if exist([conditions{j},'_03.mat'],'file')
+        load([conditions{j},'_03.mat'])
+    elseif exist([conditions{j},'_02.mat'],'file')
         load([conditions{j},'_02.mat'])
     elseif exist([conditions{j},'_01.mat'],'file')
         % load
