@@ -59,7 +59,7 @@ if nfiles > 0
     EMG.TA(i,:) = interp1(TA.times, TA_filtfilt, tnew);
     EMG.SO(i,:) = interp1(SOL.times, SO_filtfilt, tnew);
 
-        [MVC.MG(i,k), MGloc] = max(EMG.MG(i,:));
+    [MVC.MG(i,k), MGloc] = max(EMG.MG(i,:));
     [MVC.LG(i,k), LGloc] = max(EMG.LG(i,:));
     [MVC.TA(i,k), TAloc] = max(EMG.TA(i,:));
     [MVC.SO(i,k), SOloc] = max(EMG.SO(i,:));

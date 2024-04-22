@@ -1,18 +1,18 @@
-clear all; close all; clc
+clear all; clc
 
 Qs = [nan, 0, 10.^(-4:0), 1000, inf];
 foldernames = {'3011', '0812', '1312','1612','1601','1701','1901a','1901b'};
 mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
-% filenames = {'*pas_005*.mp4','*pas_30*.mp4','*pas_120*.mp4'};
-filenames = {'*slow*.mp4','*medium*.mp4','*fast*.mp4','*asym*.mp4','*sine_020*.mp4','*sine_1020*.mp4'}; 
+filenames = {'*pas_005*.mp4','*pas_30*.mp4','*pas_120*.mp4'};
+% filenames = {'*slow*.mp4','*medium*.mp4','*fast*.mp4','*asym*.mp4','*sine_020*.mp4','*sine_1020*.mp4'}; 
 
-for p = 1:8
+for p = 1
     foldername = foldernames{p};
 
-    for j = 1:length(Qs)
+    for j = 5 %1:length(Qs)
             Qval = Qs(j);
             
-        for k = 1:length(filenames)
+        for k = 3 %1:length(filenames)
 
             % get names
             cd([mainfolder foldername]);
@@ -131,7 +131,13 @@ for p = 1:8
                 % state and dependent variables
                 Fdat.Region.Fascicle.fas_x{i}   = [fasx1 fasx2];
                 Fdat.Region.Fascicle.fas_y{i}   = [fasy1 fasy2];
+                
             end
+            end
+            
+            for i = 1:N
+                Fdat.Region.Fascicle.fas_p_minus{i} = P_apriori(i);
+                Fdat.Region.Fascicle.X_minus{i} = x_apriori(i);
             end
             
             faspen = nan(1,N);

@@ -24,6 +24,8 @@ color = get(gca,'colororder');
 N = 7;
 M = length(force_conditions);
 
+c = [.1 .1; .15 .05];
+
 for j = 1:M
     
 % load
@@ -45,12 +47,16 @@ SOrel_filt = EMG.SO.filt ./ max(MVC.SO,[],2) * 100;
 
 % subtract rest torque, divide by MVC torque, multiply by 100%
 Trel = (torque(p,:) - Trest(p)) ./ Tmax(p) * 100;
-
 t = tnew - 1;
+
+
+Target = c(j,1)*Tmax(p) - c(j,2)*Tmax(p) *cos(2*pi*1.5*(t-1-0.5/1.5));
+Target(t < (1/1.5)) = 0;
 
 % subplot(M*2,1,j*2-1);
 subplot(N, M, j)
 plot(t, torque(p,:)-Trest(p),'linewidth',2); hold on
+plot(t, Target, 'k-')
 box off; 
 ylim([-5 120])
 
@@ -58,28 +64,28 @@ title(titles{j})
 
 % subplot(M*2,1,j*2);
 subplot(N, M, j+M)
-plot(t, MGrel(p,:),'linewidth',2,'color',[.5 .5 .5]); hold on
+plot(t, MGrel(p,:),'linewidth',1,'color',[.5 .5 .5]); hold on
 plot(t, MGrel_filt(p,:),'linewidth',2,'color',color(1,:)); hold on
 box off; 
-ylim([-200 200])
+ylim([-100 100])
 
 subplot(N, M, j+M*2)
-plot(t, LGrel(p,:),'linewidth',2,'color',[.5 .5 .5]); hold on
+plot(t, LGrel(p,:),'linewidth',1,'color',[.5 .5 .5]); hold on
 plot(t, LGrel_filt(p,:),'linewidth',2,'color',color(1,:)); hold on
 box off; 
-ylim([-200 200])
+ylim([-100 100])
 
 subplot(N, M, j+M*3)
-plot(t, SOrel(p,:),'linewidth',2,'color',[.5 .5 .5]); hold on
+plot(t, SOrel(p,:),'linewidth',1,'color',[.5 .5 .5]); hold on
 plot(t, SOrel_filt(p,:),'linewidth',2,'color', color(1,:)); hold on
 box off; 
-ylim([-200 200])
+ylim([-100 100])
 
 subplot(N, M, j+M*4)
-plot(t, TArel(p,:),'linewidth',2,'color',[.5 .5 .5]); hold on
+plot(t, TArel(p,:),'linewidth',1,'color',[.5 .5 .5]); hold on
 plot(t, TArel_filt(p,:),'linewidth',2,'color',color(1,:)); hold on
 box off; 
-ylim([-200 200])
+ylim([-100 100])
 
 end
 
@@ -102,7 +108,7 @@ i = 1;
 
 foldername = foldernames{j};
 
-dcolor = [5 .5 .5; .8 .8 .8; color(1,:)];
+dcolor = [.5 .5 .5; color(2,:)+[0 .2 .2]; color(1,:)];
 
 is = [1 length(Qs) 5];
 m = 0;
@@ -127,12 +133,12 @@ for k = 1:length(filenames)
 
         subplot(N, M, k+M*5)
         plot(t,Fdat.Region.PEN*180/pi,'color',dcolor(m,:),'linewidth',2); hold on
-        ylim([15 40])
+        ylim([15 30])
         box off
 
         subplot(N, M, k+M*6)  
         plot(t,Fdat.Region.FL,'color',dcolor(m,:),'linewidth',2); hold on
-        ylim([35 80])
+        ylim([50 80])
         box off
         xlabel('Time (s)')
     end

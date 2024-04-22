@@ -42,7 +42,7 @@ SOrel_filt = EMG.SO.filt ./ max(MVC.SO,[],2) * 100;
 % subtract rest torque, divide by MVC torque, multiply by 100%
 Trel = (torque(p,:) - Trest(p)) ./ Tmax(p) * 100;
 
-t = tnew - 1;
+t = tnew;
 
 % subplot(length(force_conditions)*2,1,j*2-1);
 subplot(N, length(force_conditions), j)
@@ -103,8 +103,7 @@ j = 1;
 i = 1;
 
 foldername = foldernames{j};
-
-dcolor = [.8 .8 .8; .5 .5 .5; color(1,:)];
+dcolor = [color(2,:)+[0 .2 .2];.5 .5 .5; color(1,:)];
 
 is = [length(Qs) 1 5];
 m = 0;
@@ -146,7 +145,7 @@ end
 %%
 for i = 1:(length(force_conditions)*N)
     subplot(N, length(force_conditions), i);
-    xlim([2 12])
+    xlim([0 11])
 end
 
 figure(1)

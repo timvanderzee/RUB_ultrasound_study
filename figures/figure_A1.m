@@ -103,7 +103,8 @@ i = 1;
 
 foldername = foldernames{j};
 
-dcolor = [.8 .8 .8; .5 .5 .5; color(1,:)];
+
+dcolor = [color(2,:)+[0 .2 .2]; .5 .5 .5; color(1,:)];
 
 is = [length(Qs) 1 5];
 m = 0;
