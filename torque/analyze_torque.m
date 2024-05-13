@@ -9,6 +9,9 @@ load('RampTarget.mat','tnew','rampTarget')
 force_conditions = {'slow','medium','fast','asym'};
 image_qualities = {'low', 'high'};
 
+mTrel = nan(4,2);
+sTrel = nan(4,2);
+
 for i = 1:2
 for j = 1:4
     
@@ -18,6 +21,8 @@ load([force_conditions{j},'_',image_qualities{i},'_summary.mat'])
 % subtract rest torque, divide by MVC torque, multiply by 100%
 Trel = (torque - Trest(:)) ./ Tmax(:) * 100;
 
+mTrel(j,i) = mean(mean(Trel,2,'omitnan'));
+sTrel(j,i) = std(mean(Trel,2,'omitnan'));
 
 figure(i)
 color = get(gca,'colororder');
@@ -56,6 +61,10 @@ for j = 1:2
     sineTarget(j,:) = A(j)*cos(2*pi*1.5*tnew) + O(j);
 end
 
+mTrel = nan(1,2);
+sTrel = nan(1,2);
+
+
 for j = 1:2
     
     % load
@@ -64,6 +73,9 @@ for j = 1:2
     % subtract rest torque, divide by MVC torque, multiply by 100%
     Trel = (torque - Trest(:)) ./ Tmax(:) * 100;
     
+    mTrel(j) = mean(mean(Trel,2,'omitnan'));
+    sTrel(j) = std(mean(Trel,2,'omitnan'));
+
     figure(3)
     color = get(gca,'colororder');
 
