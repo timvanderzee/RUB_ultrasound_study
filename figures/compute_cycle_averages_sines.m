@@ -148,15 +148,15 @@ for k = 1:M
     files = dir(filenames{k});
     vidname = files.name(1:end-4);
 
-    filename = [vidname,'_analyzed_Q=',strrep(num2str(Qs(i)),'.',''),'_v2'];
+%     filename = [vidname,'_analyzed_Q=',strrep(num2str(Qs(i)),'.',''),'_v2'];
+%     cd([mainfolder foldername,'\analyzed\mat']);
 
-    cd([mainfolder foldername,'\analyzed\mat']);
+    filename = [vidname,'_tracked_Q=',strrep(num2str(Qs(i)),'.','')];
+    cd([mainfolder foldername,'\Tracked']);
 
     if exist([filename,'.mat'],'file')
         load([filename,'.mat'],'Fdat');
-    else
-        disp(['Not found: ', filename,'.mat'])
-    end
+
     
     % get deep aponeurosis angle
     gamma = nan(1,length(Fdat.Region.ROIy));
@@ -172,12 +172,20 @@ for k = 1:M
     pen_rs = nan(length(Ts)-1, 101);
     len_rs = nan(length(Ts)-1, 101);
     
+    % low-pass
+    fs = 1/.03;
+    fc = 2.5;
+    N = 2;
+    Wn = fc / (.5*fs);
+    [b,a] = butter(N, Wn, 'high');
+    hpen = abs(filtfilt(b,a,Fdat.Region.PEN(:)*180/pi));
+    
     for n = 1:length(Ts)-1
 %         id = (tall <= Ts(n));
         id = (tall >= Ts(n)) & (tall <= Ts(n+1));
 
         % cut
-        pen = Fdat.Region.PEN(id)*180/pi - gamma(id);
+        pen = Fdat.Region.PEN(id);
         len = Fdat.Region.FL(id);
         tnew = mod(tall(id),T);
         
@@ -200,6 +208,12 @@ for k = 1:M
         
         msd_phi(n,1) = mean(sd_phi,'omitnan');
         msd_faslen(n,1) = mean(sd_faslen,'omitnan');
+        
+%         mpen(n) = mean(pen(is));
+%         mlen(n) = mean(len(is));
+%         
+%         spen(n) = mean(hpen(id));
+%         slen(n) = mean(abs(diff(len(is))));
     end
     
     
@@ -242,16 +256,31 @@ for k = 1:M
     
         
     % drift estimate
-    drift_phi(:,p,k,i) = cumsum(mean(diff(pen_rs),2));
-    drift_len(:,p,k,i) = cumsum(mean(diff(len_rs),2));
-    
+    drift_phi(:,p,k,i) = abs(cumsum(mean(diff(pen_rs),2)));
+    drift_len(:,p,k,i) = abs(cumsum(mean(diff(len_rs),2)));
+
+
+%     drift_phi(:,p,k,i) = abs(mpen - mpen(1));
+%     drift_len(:,p,k,i) = abs(mlen - mlen(1));
+
+
     % noise estimte
     noise_phi(:,p,k,i) = std(diff(pen_rs),1,2);
     noise_len(:,p,k,i) = std(diff(len_rs),1,2);
+%     
+%     noise_phi(:,p,k,i) = spen;
+%     noise_len(:,p,k,i) = slen;
     
     % deviation estimates
     msdphis(:,p,k,i) = msd_phi;
     msdlens(:,p,k,i) = msd_faslen;
+    
+%     SNR_phi(p,k,i) = snr(Fdat.Region.PEN*180/pi);
+%     SNR_len(p,k,i) = snr(Fdat.Region.LEN);
+       
+    else
+        disp(['Not found: ', filename,'.mat'])
+    end
 
 end
 end
@@ -260,4 +289,4 @@ end
 %% save
 % cd('C:\Users\timvd\Documents\RUB_ultrasound_study\figures')
 cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\figures');
-save('cycle_averages_sines.mat')
+save('cycle_averages_sines_v2.mat')

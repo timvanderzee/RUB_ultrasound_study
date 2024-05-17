@@ -63,6 +63,17 @@ for j = 1:M
         plot(x2(:), mean(mlen,2),'linewidth',2,'color',dcolor(ms(m),:)); hold on
     end
     
+    i = 9;
+    m = 2;
+
+    subplot(N, M, j+M*5)
+    mphi = mphis(:,:,j,i) - repmat(reshape(pen0(j+4,m,:), [1 8]),101,1); % subtract rest
+    plot(x2(:), mean(mphi,2),'--','linewidth',1,'color',dcolor(ms(m),:)); hold on
+    
+     subplot(N, M, j+M*6)
+        mlen = mlens(:,:,j,i) - repmat(reshape(len0(j+4,m,:), [1 8]),101,1); % subtract rest
+    plot(x2(:), mean(mlen,2),'--','linewidth',1,'color',dcolor(ms(m),:)); hold on
+    
 end
 
 %% make nice
@@ -77,7 +88,7 @@ end
 
 % set(gcf,'units','normalized','position',[.2 0 .2 .9])
 
-set(gcf,'units','normalized','position',[0 0 .4 .99])
+set(gcf,'units','normalized','position',[0 0 .4 .9])
 
 subplot(N,M,1); ylabel('Torque (N-m)')
 subplot(N,M,M+1); ylabel('MG (%MVC)')

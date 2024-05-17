@@ -1,8 +1,8 @@
 clear all; close all; clc
 Qs = [nan, 0, 10.^(-4:0), 1000, inf];
 
-mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
-% mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+% mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
 subfolders = dir(mainfolder);
 
 foldernames = {'3011', '0812', '1312','1612','1601','1701','1901a','1901b'};
@@ -36,8 +36,16 @@ for k = 1:length(filenames)
         disp(['Not found: ', filename,'.mat'])
     end
 
+    gamma = nan(1,length(Fdat.Region.ROIy));
+    for ii = 1:length(Fdat.Region.ROIy)
+        deep_apo_y = round(Fdat.Region.ROIy{ii}(2:3));
+        deep_apo_x = round(Fdat.Region.ROIx{ii}(2:3));
+        
+        gamma(1,ii) = atan2d(-diff(deep_apo_y), diff(deep_apo_x));
+    end
+    
     % get the first length and pennation
-    pen0(k,m,p) = mean(Fdat.Region.PEN(1))*180/pi;
+    pen0(k,m,p) = mean(Fdat.Region.PEN(1))*180/pi - gamma(1);
     len0(k,m,p) = mean(Fdat.Region.FL(1));
     
 %     figure(p)
@@ -59,5 +67,6 @@ for p = 1:8
 end
 
 %%
-cd('C:\Users\timvd\Documents\RUB_ultrasound_study\figures')
+% cd('C:\Users\timvd\Documents\RUB_ultrasound_study\figures')
+cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\figures')
 save('L0.mat','pen0','len0')
