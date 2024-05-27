@@ -104,7 +104,7 @@ mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD
 subfolders = dir(mainfolder);
 
 foldernames = {'3011', '0812', '1312','1612','1601','1701','1901a','1901b'};
-filenames = {'*slow*.mp4','*medium*.mp4','*fast*.mp4','*asym*.mp4'}; 
+filenames = {'*slow_high*.mp4','*medium_high*.mp4','*fast_high*.mp4','*asym_high*.mp4'}; 
 
 % force_conditions = {'slow','medium','fast','asym','sine_020','sine_1020'};
 

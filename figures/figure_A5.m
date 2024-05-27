@@ -83,6 +83,10 @@ end
 for i = 1:(length(force_conditions)*N)
     subplot(N, length(force_conditions), i);
     xlim([0 15])
+    
+    if i > 3 && i < 16
+        ylim([-50 50])
+    end
 end
 
 %% add ultrasound
@@ -116,18 +120,23 @@ for k = 1:length(filenames)
     vidname = files.name(1:end-4);
 
     filename = [vidname,'_analyzed_Q=',strrep(num2str(Qs(i)),'.','')];
-
     cd([mainfolder foldername,'\analyzed\mat']);
-
-    if exist([filename,'_v2.mat'],'file')
-        load([filename,'_v2.mat']);
+    
+    % new version
+    filename = [vidname,'_tracked_Q=',strrep(num2str(Qs(i)),'.','')];
+    cd([mainfolder foldername,'\Tracked']);
+    
+%     if exist([filename,'_v2.mat'],'file')
+%         load([filename,'_v2.mat']);
+     if exist([filename,'.mat'],'file')
+        load([filename,'.mat']);
         
         % recreate t
 %         t = 0:.03:((2667-1)*.03);
         n = length(Fdat.Region.PEN);
         t = 0:.03:((n-1)*.03);
         subplot(N, length(force_conditions), k+length(force_conditions)*5)
-        plot(t,Fdat.Region.PEN*180/pi,'color',dcolor(m,:),'linewidth',2); hold on
+        plot(t,Fdat.Region.PEN,'color',dcolor(m,:),'linewidth',2); hold on
         ylim([10 40])
         box off
 

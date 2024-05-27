@@ -108,7 +108,9 @@ i = 1;
 
 foldername = foldernames{j};
 
-dcolor = [.5 .5 .5; color(2,:)+[0 .2 .2]; color(1,:)];
+% dcolor = [.5 .5 .5; color(2,:)+[0 .2 .2]; color(1,:)];
+
+dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
 
 is = [1 length(Qs) 5];
 m = 0;
@@ -121,10 +123,14 @@ for k = 1:length(filenames)
     files = dir(filenames{k});
     vidname = files.name(1:end-4);
 
-    filename = [vidname,'_analyzed_Q=',strrep(num2str(Qs(i)),'.',''),'_v2'];
-
-    cd([mainfolder foldername,'\analyzed\mat']);
-
+    % previous version
+%     filename = [vidname,'_analyzed_Q=',strrep(num2str(Qs(i)),'.',''),'_v2'];
+%     cd([mainfolder foldername,'\analyzed\mat']);
+    
+    % new version
+    filename = [vidname,'_tracked_Q=',strrep(num2str(Qs(i)),'.','')];
+    cd([mainfolder foldername,'\Tracked']);
+    
     if exist([filename,'.mat'],'file')
         load([filename,'.mat']);
         
@@ -132,13 +138,13 @@ for k = 1:length(filenames)
         t = 0:.03:((2667-1)*.03);
 
         subplot(N, M, k+M*5)
-        plot(t,Fdat.Region.PEN*180/pi,'color',dcolor(m,:),'linewidth',2); hold on
+        plot(t,Fdat.Region.PEN,'color',dcolor(m,:),'linewidth',2); hold on
         ylim([15 30])
         box off
 
         subplot(N, M, k+M*6)  
         plot(t,Fdat.Region.FL,'color',dcolor(m,:),'linewidth',2); hold on
-        ylim([50 80])
+        ylim([50 75])
         box off
         xlabel('Time (s)')
     end
