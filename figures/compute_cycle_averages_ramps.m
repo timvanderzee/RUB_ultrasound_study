@@ -123,9 +123,11 @@ for k = 1:M
     files = dir(filenames{k});
     vidname = files.name(1:end-4);
 
-    filename = [vidname,'_analyzed_Q=',strrep(num2str(Qs(i)),'.',''),'_v2'];
-
-    cd([mainfolder foldername,'\analyzed\mat']);
+    filename = [vidname,'_tracked_Q=',strrep(num2str(Qs(i)),'.','')];
+    cd([mainfolder foldername,'\Tracked']);
+    
+%     filename = [vidname,'_analyzed_Q=',strrep(num2str(Qs(i)),'.',''),'_v2'];
+%     cd([mainfolder foldername,'\analyzed\mat']);
 
     if exist([filename,'.mat'],'file')
         load([filename,'.mat'],'Fdat');
@@ -147,7 +149,7 @@ for k = 1:M
         id = (tall >= Ts(n)) & (tall <= Ts(n+1));
 
         % cut
-        pen = Fdat.Region.PEN(id)*180/pi;
+        pen = Fdat.Region.PEN(id);
         len = Fdat.Region.FL(id);
         tnew = mod(tall(id),T);
         

@@ -94,8 +94,8 @@ N = 7;
 Qs = [nan, 0, 10.^(-4:0), 1000, inf];
 color = get(gca,'colororder');
 
-% mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
-mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+% mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
 subfolders = dir(mainfolder);
 
 foldernames = {'3011', '0812', '1312','1612','1601','1701','1901a','1901b'};
@@ -287,6 +287,6 @@ end
 end
 
 %% save
-% cd('C:\Users\timvd\Documents\RUB_ultrasound_study\figures')
-cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\figures');
+cd('C:\Users\timvd\Documents\RUB_ultrasound_study\figures')
+% cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\figures');
 save('cycle_averages_sines_v2.mat')

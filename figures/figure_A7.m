@@ -67,9 +67,11 @@ for k = 1:length(filenames)
     files = dir(filenames{k});
     vidname = files.name(1:end-4);
     
-    cd([mainfolder foldername,'\analyzed\mat']);
+    filename = [vidname,'_tracked_Q=',strrep(num2str(Qs(i)),'.','')];
+    cd([mainfolder foldername,'\Tracked']);
     
-        filename = [vidname,'_analyzed_Q=',strrep(num2str(Qs(i)),'.',''),'_v2'];
+%     cd([mainfolder foldername,'\analyzed\mat']);
+%         filename = [vidname,'_analyzed_Q=',strrep(num2str(Qs(i)),'.',''),'_v2'];
     
     if exist([filename,'.mat'],'file')
         load([filename,'.mat']);
@@ -107,7 +109,7 @@ for p = 1:8
             mlen = movmean(len(ii,p,i,m),NN,'omitnan');
             slen = movstd(len(ii,p,i,m),NN,'omitnan');
             
-            subplot(2,3,i)
+%             subplot(2,3,i)
               
             id = isfinite(asort); 
             
@@ -165,4 +167,5 @@ subplot(233); title('120 deg/s')
 subplot(234); ylabel('Length (mm)')
 
 set(gcf,'units','normalized','position',[.2 .2 .4 .4])
+
 
