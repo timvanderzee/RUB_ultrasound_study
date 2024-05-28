@@ -4,16 +4,19 @@ clear all; close all; clc
 
 figure(1)
 color = get(gca,'colororder');
-dcolor = [color(2,:)+[0 .1 .1];.6 .6 .6; color(1,:)];
-dcolors = dcolor + .1;
+% dcolor = [color(2,:)+[0 .1 .1];.6 .6 .6; color(1,:)];
+% dcolors = dcolor + .1;
+dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
+dcolors = dcolor;
+
 n = 1:118;
 N = 1:119;
 
-ix = [9 1 5];
+ix = [1 9 5];
 id = ix;
 
 %% passive
-load('variability_passive.mat','pen_sd')
+load('variability_passive.mat','mspen')
 
 
 if ishandle(1), close(1); end; figure(1)
@@ -22,8 +25,8 @@ titles = {'5 deg/s','30 deg/s','120 deg/s'};
 for j = 1:3
 
     subplot(1,3,j);
-    categories = repmat({'TT','UT', 'UTT'},8,1);
-    violinplot(pen_sd(:,:,j)', categories, 'ViolinColor', dcolor,    'ShowMean', true, 'ShowMedian', false);          
+    categories = repmat({'UT','TT', 'UTT'},8,1);
+    violinplot(mspen(:,:,j)', categories, 'ViolinColor', dcolor,    'ShowMean', true, 'ShowMedian', false);          
 
                 
 end

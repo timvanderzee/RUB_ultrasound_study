@@ -10,11 +10,13 @@ load('L0.mat')
 %%
 
 dcolor = [color(2,:)+[0 .1 .1];.6 .6 .6; color(1,:)];
-dcolors = dcolor + .1;
+dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
+dcolors = dcolor;
+
 n = 1:118;
 N = 1:119;
 
-ix = [9 1 5];
+ix = [1 9 5];
 
 figure(1)
 
@@ -137,10 +139,10 @@ subplot(344)
 title('Last cycle')
 
 subplot(345); 
-ylabel('Irregularity (deg)')
+ylabel('Betw.-cycle variability (deg)')
 
 subplot(349);
-ylabel('Consistency')
+ylabel('Overall variability')
 xlabel('Cycle #')
 % xlim([0 20])
 
@@ -160,4 +162,6 @@ drift = squeeze(drift_phi(length(n),:,j,ix));
 
 [h,p] = ttest(drift(:,1), drift(:,3))
 
+%%
+copygraphics(gcf,'ContentType','vector')
 

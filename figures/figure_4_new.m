@@ -42,11 +42,11 @@ SOrel_filt = EMG.SO.filt ./ max(MVC.SO,[],2) * 100;
 % subtract rest torque, divide by MVC torque, multiply by 100%
 Trel = (torque(p,:) - Trest(p)) ./ Tmax(p) * 100;
 
-t = tnew;
+t = tnew(1:5:end);
 
 % subplot(length(force_conditions)*2,1,j*2-1);
 subplot(N, length(force_conditions), j)
-plot(t, angle(p,:),'linewidth',2); hold on
+plot(t, angle(p,1:5:end),'linewidth',2,'color',color(5,:)); hold on
 box off; 
 % ylim([-5 120])
 
@@ -54,26 +54,26 @@ title(titles{j})
 
 % subplot(length(force_conditions)*2,1,j*2);
 subplot(N, length(force_conditions), j+length(force_conditions))
-plot(t, MGrel(p,:),'linewidth',2,'color',[.5 .5 .5]); hold on
-plot(t, MGrel_filt(p,:),'linewidth',2,'color',color(1,:)); hold on
+plot(t, MGrel(p,1:5:end),'linewidth',2,'color',[.5 .5 .5]); hold on
+plot(t, MGrel_filt(p,1:5:end),'linewidth',2,'color',color(5,:)); hold on
 box off; 
 ylim([-200 200])
 
 subplot(N, length(force_conditions), j+length(force_conditions)*2)
-plot(t, LGrel(p,:),'linewidth',2,'color',[.5 .5 .5]); hold on
-plot(t, LGrel_filt(p,:),'linewidth',2,'color',color(1,:)); hold on
+plot(t, LGrel(p,1:5:end),'linewidth',2,'color',[.5 .5 .5]); hold on
+plot(t, LGrel_filt(p,1:5:end),'linewidth',2,'color',color(5,:)); hold on
 box off; 
 ylim([-200 200])
 
 subplot(N, length(force_conditions), j+length(force_conditions)*3)
-plot(t, SOrel(p,:),'linewidth',2,'color',[.5 .5 .5]); hold on
-plot(t, SOrel_filt(p,:),'linewidth',2,'color', color(1,:)); hold on
+plot(t, SOrel(p,1:5:end),'linewidth',2,'color',[.5 .5 .5]); hold on
+plot(t, SOrel_filt(p,1:5:end),'linewidth',2,'color', color(5,:)); hold on
 box off; 
 ylim([-200 200])
 
 subplot(N, length(force_conditions), j+length(force_conditions)*4)
-plot(t, TArel(p,:),'linewidth',2,'color',[.5 .5 .5]); hold on
-plot(t, TArel_filt(p,:),'linewidth',2,'color',color(1,:)); hold on
+plot(t, TArel(p,1:5:end),'linewidth',2,'color',[.5 .5 .5]); hold on
+plot(t, TArel_filt(p,1:5:end),'linewidth',2,'color',color(5,:)); hold on
 box off; 
 ylim([-200 200])
 
@@ -82,10 +82,14 @@ end
 %%
 for i = 1:(length(force_conditions)*N)
     subplot(N, length(force_conditions), i);
-    xlim([0 15])
+    xlim([0 12])
+    
+    if i < 4
+        ylim([-10 50])
+    end
     
     if i > 3 && i < 16
-        ylim([-50 50])
+        ylim([-10 10])
     end
 end
 
@@ -94,8 +98,8 @@ N = 7;
 Qs = [nan, 0, 10.^(-4:0), 1000, inf];
 color = get(gca,'colororder');
 
-mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
-% mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+% mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
 subfolders = dir(mainfolder);
 
 foldernames = {'3011', '0812', '1312','1612','1601','1701','1901a','1901b'};
@@ -107,9 +111,10 @@ j = 1;
 i = 1;
 
 foldername = foldernames{j};
-dcolor = [color(2,:)+[0 .2 .2];.5 .5 .5; color(1,:)];
+% dcolor = [color(2,:)+[0 .2 .2];.5 .5 .5; color(1,:)];
+dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
 
-is = [length(Qs) 1 5];
+is = [1 length(Qs) 5];
 m = 0;
 for i = is
     m = m+1;
@@ -119,8 +124,8 @@ for k = 1:length(filenames)
     files = dir(filenames{k});
     vidname = files.name(1:end-4);
 
-    filename = [vidname,'_analyzed_Q=',strrep(num2str(Qs(i)),'.','')];
-    cd([mainfolder foldername,'\analyzed\mat']);
+%     filename = [vidname,'_analyzed_Q=',strrep(num2str(Qs(i)),'.','')];
+%     cd([mainfolder foldername,'\analyzed\mat']);
     
     % new version
     filename = [vidname,'_tracked_Q=',strrep(num2str(Qs(i)),'.','')];
@@ -137,12 +142,12 @@ for k = 1:length(filenames)
         t = 0:.03:((n-1)*.03);
         subplot(N, length(force_conditions), k+length(force_conditions)*5)
         plot(t,Fdat.Region.PEN,'color',dcolor(m,:),'linewidth',2); hold on
-        ylim([10 40])
+        ylim([20 40])
         box off
 
         subplot(N, length(force_conditions), k+length(force_conditions)*6)  
         plot(t,Fdat.Region.FL,'color',dcolor(m,:),'linewidth',2); hold on
-        ylim([30 70])
+        ylim([35 75])
         box off
         xlabel('Time (s)')
     end
@@ -154,7 +159,7 @@ end
 %%
 for i = 1:(length(force_conditions)*N)
     subplot(N, length(force_conditions), i);
-    xlim([0 11])
+    xlim([0 16])
 end
 
 figure(1)
@@ -167,4 +172,7 @@ subplot(N,3,10); ylabel('SOL (%MVC)')
 subplot(N,3,13); ylabel('TA (%MVC)')
 subplot(N,3,16); ylabel('Pennation (deg)')
 subplot(N,3,19); ylabel('Length (mm)')
+
+%%
+copygraphics(gcf,'ContentType','vector')
 

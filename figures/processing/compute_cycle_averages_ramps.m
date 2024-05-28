@@ -77,12 +77,12 @@ N = 7;
 Qs = [nan, 0, 10.^(-4:0), 1000, inf];
 color = get(gca,'colororder');
 
-mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
-% mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+% mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
 subfolders = dir(mainfolder);
 
 foldernames = {'3011', '0812', '1312','1612','1601','1701','1901a','1901b'};
-filenames = {'*slow*.mp4','*medium*.mp4','*fast*.mp4','*asym*.mp4'}; 
+filenames = {'*slow_high*.mp4','*medium_high*.mp4','*fast_high*.mp4','*asym_high*.mp4'}; 
 
 % force_conditions = {'slow','medium','fast','asym','sine_020','sine_1020'};
 
@@ -90,9 +90,9 @@ filenames = {'*slow*.mp4','*medium*.mp4','*fast*.mp4','*asym*.mp4'};
 participants = foldernames;
 
 %% Figure 3: cycle average
-dcolor = [.5 .5 .5; .8 .8 .8; color(1,:)];
-
-ix = [length(Qs) 1 5];
+% dcolor = [.5 .5 .5; .8 .8 .8; color(1,:)];
+dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
+ix = [1 length(Qs) 5];
 % ix = 1;
 % ix = 5;
 % ix = 6;
@@ -194,5 +194,6 @@ end
 end
 
 %% save
-cd('C:\Users\timvd\Documents\RUB_ultrasound_study\figures')
-save('cycle_averages_ramps.mat')
+% cd('C:\Users\timvd\Documents\RUB_ultrasound_study\figures')
+cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\figures\data')
+save('cycle_averages_ramps.mat','msdphis','mtsus','mphis','mlens','msdlens')

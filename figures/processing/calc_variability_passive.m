@@ -40,8 +40,8 @@ end
 Qs = [nan, 0, 10.^(-4:0), 1000, inf];
 color = get(gca,'colororder');
 
-mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
-% mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+% mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
 subfolders = dir(mainfolder);
 
 foldernames = {'3011', '0812', '1312','1612','1601','1701','1901a','1901b'};
@@ -56,7 +56,7 @@ len = nan(nn, 8, 3, 3);
 for p = 1:8
 foldername = foldernames{p};
 
-is = [length(Qs) 1 5];
+is = [1 length(Qs) 5];
 m = 0;
 
 for i = is
@@ -94,10 +94,17 @@ end
 %%
 
 
-if ishandle(1), close(1); end
-figure(1)
+% 
+% if ishandle(1), close(1); end
+% figure(1)
 
 titles = {'Slow','Medium','Fast'};
+
+
+dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
+
+mpen = nan(50,8,3,3);
+spen = nan(50,8,3,3);
 
 for p = 1:8
 % for a = 1:3
@@ -117,27 +124,59 @@ for a = 1:3
 
             % fit polynomial
 
-            id = isfinite(angle_rs(:,p,k)) & isfinite(pen(:,p,k,a));
 
-            coef = polyfit(angle_rs(id,p,k), pen(id,p,k,a), 3);
+            
+%             id = isfinite(angle_rs(:,p,k)) & isfinite(pen(:,p,k,a));
+
+                as = floor(min(angle_rs(:,p,k))):1:(ceil(max(angle_rs(:,p,k)))-1);
+            for i = 1:length(as)-1
+                id = (angle_rs(:,p,k) > as(i)) & (angle_rs(:,p,k) < as(i+1));
+            
+                mpen(i,p,k,a) = mean(pen(id,p,k,a));
+                spen(i,p,k,a) = std(pen(id,p,k,a));
+            end
+
+                figure(p)
+                subplot(1,3,k)
+              errorbar(as(1:end-1), mpen(1:(length(as)-1),p,k,a), spen(1:(length(as)-1),p,k,a), 'color', dcolor(a,:)); hold on
+                
+%             coef = polyfit(angle_rs(id,p,k), pen(id,p,k,a), 3);
 % 
 %             subplot(1,3,k)
 %             angle_lin = linspace(min(angle_rs(id,p,k)), max(angle_rs(id,p,k)), 100);
 %             plot(angle_lin, polyval(coef, angle_lin),'k-')
 %             
-            pen_pred = polyval(coef, angle_rs(id,p,k));
+%             pen_pred = polyval(coef, angle_rs(id,p,k));
             
-            pen_sd(a,p,k) = mean(sqrt((pen_pred - pen(id,p,k,a)).^2));
+%             pen_sd(a,p,k) = mean(sqrt((pen_pred - pen(id,p,k,a)).^2));
         
         end
 end
 end
 % legend('TT','UT','UTT')
 
-%%
-figure(2)
-for k = 1:3
-    subplot(1,3,k)
-    errorbar(1:3, mean(pen_sd(:,:,k),2), std(pen_sd(:,:,k),1,2));
-    ylim([0 3])
+%% average over angles
+for p = 1:8
+    for a = 1:3
+        for k = 1:3
+            mspen(a,p,k) = mean(spen(:,p,k,a),'omitnan');
+        end
+    end
 end
+
+%% plot
+figure(100)
+for a = 1:3
+    errorbar(1:3, mean(mspen(a,:,:),2), std(mspen(a,:,:),1,2)); hold on
+end
+
+%%
+cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\figures\data')
+save('variability_passive.mat')
+%%
+% figure(2)
+% for k = 1:3
+%     subplot(1,3,k)
+%     errorbar(1:3, mean(pen_sd(:,:,k),2), std(pen_sd(:,:,k),1,2));
+%     ylim([0 3])
+% end
