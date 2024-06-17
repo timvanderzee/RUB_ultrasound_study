@@ -68,7 +68,7 @@ for j = 1:M
     sigma = [std(T_pc); std(MG_pc); std(LG_pc); std(SO_pc); std(TA_pc)];
     
     % save the cycle average
-    mus(:,:,p,j,i) = mu;
+    mus(:,:,p,j) = mu;
 end
 end
 
@@ -107,7 +107,7 @@ mphis = nan(101, 8, 6, length(Qs),2);
 mlens = nan(101, 8, 6, length(Qs),2);
 
     
-for p = 1:8
+for p = 5
 for j = 1:2
     if j == 1
         filenames = {'*slow_low*.mp4','*medium_low*.mp4','*fast_low*.mp4','*asym_low*.mp4'}; 
@@ -153,12 +153,7 @@ for k = 1:M
     Ts = (0:10)*T;
     dt = 1/fs;
     
-    if j == 1
-        tall = 0:dt:(Ts(end)-dt);
-    
-    else
-        tall = 0:dt:Ts(end);
-    end
+    tall = 0:dt:Ts(end);
     
     msd_phi = nan(length(Ts)-1,1);
     msd_faslen = nan(length(Ts)-1,1);
@@ -174,24 +169,16 @@ for k = 1:M
         len = Fdat.Region.FL(id);
         tnew = mod(tall(id),T);
         
-        
-        % unique
-        [tnew,IA,IC] = unique(tnew);
-        upen = pen(IA);
-        ulen = len(IA);
-        
 %         figure(100)
 %         plot(tnew, pen); hold on
 
         % sort
         [tnew2, is] = sort(tnew);
-        
-        
 
         % resample
         ts = linspace(0, T, 101);
-        pen_rs(n,:) = interp1(tnew2, upen(is), ts,[],'extrap');
-        len_rs(n,:) = interp1(tnew2, ulen(is), ts,[],'extrap');    
+        pen_rs(n,:) = interp1(tnew2, pen(is), ts,[],'extrap');
+        len_rs(n,:) = interp1(tnew2, len(is), ts,[],'extrap');    
     
         % mean and standard deviation
         phi = mean(pen_rs,'omitnan');
@@ -224,6 +211,6 @@ end
 end
 
 %% save
-cd('C:\Users\timvd\Documents\RUB_ultrasound_study\figures\data')
-% cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\figures\data')
-save('cycle_averages_ramps.mat','msdphis','mtsus','mphis','mlens','msdlens')
+% cd('C:\Users\timvd\Documents\RUB_ultrasound_study\figures')
+cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\figures\data')
+% save('cycle_averages_ramps.mat','msdphis','mtsus','mphis','mlens','msdlens')

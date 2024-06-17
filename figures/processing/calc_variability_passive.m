@@ -40,8 +40,8 @@ end
 Qs = [nan, 0, 10.^(-4:0), 1000, inf];
 color = get(gca,'colororder');
 
-% mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
-mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+% mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
 subfolders = dir(mainfolder);
 
 foldernames = {'3011', '0812', '1312','1612','1601','1701','1901a','1901b'};
@@ -167,12 +167,12 @@ end
 %% plot
 figure(100)
 for a = 1:3
-    errorbar(1:3, mean(mspen(a,:,:),2), std(mspen(a,:,:),1,2)); hold on
+    errorbar(1:3, squeeze(mean(mspen(a,:,:),2)), squeeze(std(mspen(a,:,:),1,2))); hold on
 end
 
 %%
-cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\figures\data')
-save('variability_passive.mat')
+% cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\figures\data')
+% save('variability_passive.mat')
 %%
 % figure(2)
 % for k = 1:3

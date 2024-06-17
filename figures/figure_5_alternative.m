@@ -3,12 +3,6 @@ clear all; close all; clc
 load('cycle_averages_sines_v2.mat')
 load('L0.mat')
 
-%% stats
-% drift_phi
-
-
-%%
-
 dcolor = [color(2,:)+[0 .1 .1];.6 .6 .6; color(1,:)];
 dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
 dcolors = dcolor;
@@ -68,6 +62,32 @@ for j = 1:M
     plot(mean(noise_phi(:,:,j,i),2),'--','color',dcolor(m,:),'linewidth',1); hold on
      plot(max(n), mean(noise_phi(length(n),:,j,i),2),'.','color',dcolor(m,:),'markersize',10); hold on
 end
+
+%% mean and s.d.
+algos = {'UT','TT','UTT'};
+conds = {'0-20', '10-20'};
+clc
+
+
+y.CumDev = squeeze(drift_phi(end,:,1:2,ix));
+y.C2CVar = squeeze(noise_phi(end,:,1:2,ix));
+y.TotVar = squeeze(msdphis(end,:,1:2,ix));
+
+Y = y.CumDev;
+
+for j = 1:M
+    disp(conds{j})
+    disp(' ')
+%     disp(' ')
+    
+    for m = 1:3
+            
+        disp([algos{m},': ', num2str(round(mean(Y(:,j,m),1),2)), ' - ', num2str(round(std(Y(:,j,m),1,1),2))])
+        disp(' ')
+    end
+end
+
+%% for saving
 
 
 % X = cell(1,length(Qs));
