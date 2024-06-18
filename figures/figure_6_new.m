@@ -75,6 +75,14 @@ end
 
 end
 
+%% statistics
+j = 1;
+y = squeeze(rmsdphis(end,:,j,ix,2));
+
+[~,p1] = ttest(y(:,1), y(:,3)) % UT vs UTT
+[~,p2] = ttest(y(:,2), y(:,3)) % TT vs UTT
+
+
 %% passive
 load('variability_passive.mat','mspen')
          dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
@@ -103,6 +111,14 @@ for j = 1:3
         disp(' ')
     end           
 end
+
+%%
+%% statistics
+j = 1;
+y = squeeze(mspen(:,:,j))';
+
+[~,p1] = ttest(y(:,1), y(:,3)) % UT vs UTT
+[~,p2] = ttest(y(:,2), y(:,3)) % TT vs UTT
 
 % subplot(241)
 % ylabel('Angle deviation (deg)')

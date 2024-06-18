@@ -8,7 +8,7 @@ dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
 dcolors = dcolor;
 
 n = 1:118;
-N = 1:119;
+N = 2:119;
 
 ix = [1 9 5];
 
@@ -45,7 +45,7 @@ for j = 1:M
         set(h,'FaceColor',dcolors(m,:).^.1,'LineStyle','none');
         ylim([0 8])
         box off; hold on
-        plot(mean(msdphis(:,:,j,i),2),'color',dcolor(m,:),'linewidth',2); hold on
+        plot(N, mean(msdphis(N,:,j,i),2),'color',dcolor(m,:),'linewidth',2); hold on
         plot(max(N), mean(msdphis(length(N),:,j,i),2),'.','color',dcolor(m,:),'markersize',10); hold on        
         xlim([min(N) max(N)])
         
@@ -71,9 +71,9 @@ clc
 
 y.CumDev = squeeze(drift_phi(end,:,1:2,ix));
 y.C2CVar = squeeze(noise_phi(end,:,1:2,ix));
-y.TotVar = squeeze(msdphis(end,:,1:2,ix));
+y.TotVar = squeeze(msdphis(10,:,1:2,ix));
 
-Y = y.CumDev;
+Y = y.TotVar;
 
 for j = 1:M
     disp(conds{j})
@@ -178,9 +178,15 @@ xlabel('Algorithm')
 
 
 %% statistics
-drift = squeeze(drift_phi(length(n),:,j,ix));
+% contraction x participant x trials x algorithm
+j = 2;
+y = squeeze(drift_phi(length(n),:,j,ix));
+y = squeeze(noise_phi(length(n),:,j,ix));
+y = squeeze(msdphis(10,:,j,ix));
 
-[h,p] = ttest(drift(:,1), drift(:,3))
+[~,p1] = ttest(y(:,1), y(:,3)) % UT vs UTT
+[~,p2] = ttest(y(:,2), y(:,3)) % TT vs UTT
+[~,p3] = ttest(y(:,1), y(:,2)) % TT vs UT
 
 %%
 copygraphics(gcf,'ContentType','vector')
