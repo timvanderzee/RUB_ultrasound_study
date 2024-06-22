@@ -105,6 +105,8 @@ dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
 
 mpen = nan(50,8,3,3);
 spen = nan(50,8,3,3);
+mlen = nan(50,8,3,3);
+slen = nan(50,8,3,3);
 
 for p = 1:8
 % for a = 1:3
@@ -134,6 +136,9 @@ for a = 1:3
             
                 mpen(i,p,k,a) = mean(pen(id,p,k,a));
                 spen(i,p,k,a) = std(pen(id,p,k,a));
+                
+                mlen(i,p,k,a) = mean(len(id,p,k,a));
+                slen(i,p,k,a) = std(len(id,p,k,a));
             end
 
                 figure(p)
@@ -160,6 +165,7 @@ for p = 1:8
     for a = 1:3
         for k = 1:3
             mspen(a,p,k) = mean(spen(:,p,k,a),'omitnan');
+            mslen(a,p,k) = mean(slen(:,p,k,a),'omitnan');
         end
     end
 end
@@ -171,8 +177,9 @@ for a = 1:3
 end
 
 %%
+cd('C:\Users\timvd\Documents\RUB_ultrasound_study\figures\data')
 % cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\figures\data')
-% save('variability_passive.mat')
+save('variability_passive.mat')
 %%
 % figure(2)
 % for k = 1:3
