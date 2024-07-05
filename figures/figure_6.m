@@ -61,11 +61,10 @@ end
 t = 0:dt:((N-1)*dt);
 
 subplot(211)
-plot(t, PEN,'linewidth',2,'color',[.5 .5 .5])
+plot(t, PEN,'linewidth',2)
 
 subplot(212)
-plot(t, FL,'linewidth',2,'color',[.5 .5 .5])
-
+plot(t, FL,'linewidth',2)
 
 %% make nice
 for i = 1:2
@@ -79,5 +78,23 @@ xlabel('Time (s)'); ylabel('Length (mm)')
 subplot(211)
 ylabel('Pennation (deg)')
 
-figure(1)
-legend('UltraTimTrack','DL Track','location','best'); legend boxoff
+%% manual tracking
+obs = {'TZ', 'PT', 'BR'};
+ls = {'-','--',':'};
+for i = 1:length(obs)
+    load(['Manual_Tracking_',obs{i},'.mat'])
+    
+    [ts, id] = sort(t(FasData.digitizedFrames));
+    
+    FasData.FAngle(FasData.FAngle<0) = FasData.FAngle(FasData.FAngle<0) + 180;
+    
+    
+    subplot(211)
+    plot(ts, FasData.FAngle(id),'color',[.5 .5 .5],'Linestyle',ls{i},'linewidth',2)
+    
+    subplot(212)
+    plot(ts, FasData.FLength(id)/pixpermm,'color',[.5 .5 .5],'Linestyle',ls{i},'linewidth',2)
+end
+    
+subplot(212)
+legend('UltraTimTrack','DL Track','HybridTrack','Tim','Paolo','Brent','location','best'); legend boxoff
