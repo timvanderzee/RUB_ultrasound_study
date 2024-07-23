@@ -35,7 +35,7 @@ for n_file = 1:numel(fname)
     ZeroPadL = 200 * ones(vidObj.Height, vidObj.Width, 'uint8');
     ZeroPadR = 200 * ones(vidObj.Height, vidObj.Width, 'uint8');
 
-    for ii = 1:2 %numel(frames_to_track)
+    for ii = 1:numel(frames_to_track)
         % Read the frame
         frameImg = rgb2gray(read(vidObj, frames_to_track(ii)));
         currentImage = [ZeroPadL, frameImg, ZeroPadR];
@@ -43,11 +43,11 @@ for n_file = 1:numel(fname)
         imshow(currentImage);
         hold on;
         
-        if ii == 1
-            fas = drawline('Color', 'red');
-            apo = drawline('Color', 'green');
-            sapo = drawline('Color', 'blue');
-        end
+%         if ii == 1
+%             fas = drawline('Color', 'red');
+%             apo = drawline('Color', 'green');
+%             sapo = drawline('Color', 'blue');
+%         end
         
         % Store fas and FasData in guidata
         data.fas = fas;
