@@ -49,7 +49,7 @@ subplot(212)
 plot(t, FL)
 
 %% Hybrid Track
-cd('C:\Users\u0167448\Documents\hybrid-muscle-tracking-main\TrackingResults')
+% cd('C:\Users\u0167448\Documents\hybrid-muscle-tracking-main\TrackingResults')
 load('exampleVideoTA_trackingResults.mat')
 
 N = length(Hybrid);
