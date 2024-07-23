@@ -1,4 +1,5 @@
-clear;
+clear; 
+close all
 clc;
 % Add required functions to the Matlab path.
 addpath(genpath(cd));
@@ -47,6 +48,10 @@ for n_file = 1:numel(fname)
             fas = drawline('Color', 'red');
             apo = drawline('Color', 'green');
             sapo = drawline('Color', 'blue');
+        else 
+            fas = drawline('Position',fas.Position,'Color', 'red');
+            apo = drawline('Position',apo.Position,'Color', 'green');
+            sapo = drawline('Position',sapo.Position,'Color', 'blue');
         end
         
         % Store fas and FasData in guidata
@@ -56,7 +61,6 @@ for n_file = 1:numel(fname)
         data.ApoData = ApoData;
 
         data.currentFrame = frames_to_track(ii); % Store the current frame
-
 
         guidata(hFig, data);
 
