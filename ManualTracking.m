@@ -43,11 +43,11 @@ for n_file = 1:numel(fname)
         imshow(currentImage);
         hold on;
         
-%         if ii == 1
-%             fas = drawline('Color', 'red');
-%             apo = drawline('Color', 'green');
-%             sapo = drawline('Color', 'blue');
-%         end
+        if ii == 1
+            fas = drawline('Color', 'red');
+            apo = drawline('Color', 'green');
+            sapo = drawline('Color', 'blue');
+        end
         
         % Store fas and FasData in guidata
         data.fas = fas;
