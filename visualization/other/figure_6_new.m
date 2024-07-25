@@ -18,8 +18,8 @@ algos = {'UT','TT','UTT'};
 
 
 %% ramp
-load('cycle_averages_ramps.mat','msdphis')
-rmsdphis = msdphis;
+load('cycle_averages_ramps.mat','msdphis','msdlens')
+rmsdphis = msdlens;
 
 load('cycle_averages_sines_v2.mat','msdphis')
 

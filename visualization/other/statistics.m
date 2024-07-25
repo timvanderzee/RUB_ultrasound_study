@@ -57,7 +57,6 @@ LEN.sine.high.TT = squeeze(msdlens([10, 119], :, 1, 9))';
 LEN.sine.high.UTT = squeeze(msdlens([10, 119], :, 1, 5))';
 
 
-
 LEN.ramp.slow.UT = [squeeze(rmsdlens(10, :, 1, 1,1))' squeeze(rmsdlens(10, :, 1, 1,2))'];
 LEN.ramp.slow.TT = [squeeze(rmsdlens(10, :, 1, 9,1))' squeeze(rmsdlens(10, :, 1, 9,2))'];
 LEN.ramp.slow.UTT = [squeeze(rmsdlens(10, :, 1, 5,1))' squeeze(rmsdlens(10, :, 1, 5,2))'];
@@ -86,6 +85,102 @@ LEN.pas.med.UTT = squeeze(mslen(3,:,2))';
 LEN.pas.fast.UT = squeeze(mslen(1,:,3))';
 LEN.pas.fast.TT = squeeze(mslen(2,:,3))';
 LEN.pas.fast.UTT = squeeze(mslen(3,:,3))';
+
+
+%% sinusoidal trials
+algo_1 = 'UTT';
+algo_2 = 'UT';
+
+y = LEN; % PEN or LEN
+
+close all
+modelString = 'Acc ~ (Cycle*Algo) + (Range*Algo) + (1|Subject)';
+
+Acc = [y.sine.low.(algo_1) y.sine.low.(algo_2) y.sine.high.(algo_1) y.sine.high.(algo_2)];
+Algo = repmat({algo_1, algo_1,algo_2,algo_2},8,2);
+Subject = repmat((1:8)',1,8);
+Cycle = repmat([5 120], 8,4);
+
+Range = [repmat({'low'},8,4), repmat({'high'},8,4)];
+
+N = numel(Cycle);
+
+T = table(reshape(Acc,N,1), reshape(Algo,N,1), reshape(Subject,N,1), reshape(Cycle,N,1), reshape(Range, N, 1));
+T.Properties.VariableNames = {'Acc' 'Algo' 'Subject','Cycle','Range'};
+
+
+% do linear regression!
+LM = fitlme(T,modelString)
+
+%% symmetrical ramp trials
+algo_1 = 'UTT';
+algo_2 = 'TT';
+
+y = PEN; % PEN or LEN
+close all
+modelString = 'Acc ~ (Quality*Algo) + (Speed*Algo) + (1|Subject)';
+
+Acc = [y.ramp.slow.(algo_1) y.ramp.slow.(algo_2) y.ramp.med.(algo_1) y.ramp.med.(algo_2) y.ramp.fast.(algo_1) y.ramp.fast.(algo_2)];
+Algo = repmat({algo_1, algo_1,algo_2,algo_2},8,3);
+Subject = repmat((1:8)',1,size(Acc,2));
+Quality = repmat({'low','high'}, 8,size(Acc,2)/2);
+Speed = [repmat(20,8,4) repmat(33,8,4) repmat(100,8,4)];
+
+N = numel(Speed);
+
+T = table(reshape(Acc,N,1), reshape(Algo,N,1), reshape(Subject,N,1), reshape(Quality,N,1), reshape(Speed, N, 1));
+T.Properties.VariableNames = {'Acc' 'Algo' 'Subject','Quality','Speed'};
+
+
+% do linear regression!
+LM = fitlme(T,modelString)
+
+%% asymmetrical ramp trial
+algo_1 = 'UTT';
+algo_2 = 'UT';
+
+y = PEN; % PEN or LEN
+
+close all
+modelString = 'Acc ~ (Quality*Algo) + (1|Subject)';
+
+Acc = [y.ramp.asym.(algo_1) y.ramp.asym.(algo_2)];
+Algo = repmat({algo_1, algo_1,algo_2,algo_2},8,1);
+Subject = repmat((1:8)',1,size(Acc,2))
+Quality = repmat({'low','high'}, 8,size(Acc,2)/2);
+
+N = numel(Quality);
+
+T = table(reshape(Acc,N,1), reshape(Algo,N,1), reshape(Subject,N,1), reshape(Quality,N,1));
+T.Properties.VariableNames = {'Acc' 'Algo' 'Subject','Quality'};
+
+
+% do linear regression!
+LM = fitlme(T,modelString)
+
+%% passive trials
+close all
+modelString = 'Acc ~ (Speed*Algo) + (1|Subject)';
+
+algo_1 = 'UTT';
+algo_2 = 'TT';
+
+y = PEN; % PEN or LEN
+
+Acc = [y.pas.slow.(algo_1) y.pas.slow.(algo_2) y.pas.med.(algo_1) y.pas.med.(algo_2) y.pas.fast.(algo_1) y.pas.fast.(algo_2)]
+Algo = repmat({algo_1,algo_2},8,3);
+Subject = repmat((1:8)',1,size(Acc,2))
+Speed = [repmat(5,8,2) repmat(30,8,2) repmat(120,8,2)]
+N = numel(Speed);
+
+T = table(reshape(Acc,N,1), reshape(Algo,N,1), reshape(Subject,N,1), reshape(Speed, N, 1));
+T.Properties.VariableNames = {'Acc' 'Algo' 'Subject','Speed'};
+
+
+% do linear regression!
+LM = fitlme(T,modelString)
+
+%%
 
 cd('C:\Users\timvd\Documents\RUB_ultrasound_study\figures\data')
 save('data_for_statistics.mat','PEN','LEN')
