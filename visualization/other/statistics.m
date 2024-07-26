@@ -4,8 +4,34 @@ load('cycle_averages_ramps.mat','msdphis','msdlens')
 rmsdphis = msdphis;
 rmsdlens = msdlens;
 
-load('cycle_averages_sines_v2.mat','msdphis','msdlens')
+load('cycle_averages_sines_v2.mat','msdphis','msdlens','noise_phi','drift_phi','noise_len','drift_len')
 load('variability_passive.mat','mspen','mslen')
+
+%% noise and drift
+% cycles x participants x range x algos
+ix = [1 5 9];
+algos = {'UT','UTT','TT'};
+
+for i = 1:3
+    disp([algos{i}, ' drift: ', num2str(round([mean(drift_len(end,:,1,ix(i))) std(drift_len(end,:,1,ix(i)))],1)), ' mm'])
+    disp([algos{i}, ' noise: ', num2str(round([mean(mean(noise_len(:,:,1,ix(i)))) std(mean(noise_len(:,:,1,ix(i))))],1)), ' mm'])    
+
+    disp([algos{i}, ' drift: ', num2str(round([mean(drift_phi(end,:,1,ix(i))) std(drift_phi(end,:,1,ix(i)))],1)), ' deg'])
+    disp([algos{i}, ' noise: ', num2str(round([mean(mean(noise_phi(:,:,1,ix(i)))) std(mean(noise_phi(:,:,1,ix(i))))],1)), ' deg'])
+    
+end
+
+% UTT vs UT
+[~,p] = ttest(drift_len(end,:,1,ix(1)), drift_len(end,:,1,ix(2)))
+[~,p] = ttest(mean(noise_len(:,:,1,ix(1))), mean(noise_len(:,:,1,ix(2))))
+[~,p] = ttest(drift_phi(end,:,1,ix(1)), drift_phi(end,:,1,ix(2)))
+[~,p] = ttest(mean(noise_phi(:,:,1,ix(1))), mean(noise_phi(:,:,1,ix(2))))
+
+% UTT vs TT
+[~,p] = ttest(drift_len(end,:,1,ix(3)), drift_len(end,:,1,ix(2)))
+[~,p] = ttest(mean(noise_len(:,:,1,ix(3))), mean(noise_len(:,:,1,ix(2))))
+[~,p] = ttest(drift_phi(end,:,1,ix(3)), drift_phi(end,:,1,ix(2)))
+[~,p] = ttest(mean(noise_phi(:,:,1,ix(3))), mean(noise_phi(:,:,1,ix(2))))
 
 %% pennation
 PEN.sine.low.UT = squeeze(msdphis([10, 119], :, 2, 1))';
