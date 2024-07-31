@@ -21,17 +21,33 @@ for i = 1:3
     
 end
 
+id = 2;
+
 % UTT vs UT
-[~,p] = ttest(drift_len(end,:,1,ix(1)), drift_len(end,:,1,ix(2)))
-[~,p] = ttest(mean(noise_len(:,:,1,ix(1))), mean(noise_len(:,:,1,ix(2))))
-[~,p] = ttest(drift_phi(end,:,1,ix(1)), drift_phi(end,:,1,ix(2)))
-[~,p] = ttest(mean(noise_phi(:,:,1,ix(1))), mean(noise_phi(:,:,1,ix(2))))
+[~,p1] = ttest(drift_len(end,:,id,ix(1)), drift_len(end,:,id,ix(2)));
+[~,p2] = ttest(mean(noise_len(:,:,id,ix(1))), mean(noise_len(:,:,id,ix(2))));
+[~,p3] = ttest(drift_phi(end,:,id,ix(1)), drift_phi(end,:,id,ix(2)));
+[~,p4] = ttest(mean(noise_phi(:,:,id,ix(1))), mean(noise_phi(:,:,id,ix(2))));
 
 % UTT vs TT
-[~,p] = ttest(drift_len(end,:,1,ix(3)), drift_len(end,:,1,ix(2)))
-[~,p] = ttest(mean(noise_len(:,:,1,ix(3))), mean(noise_len(:,:,1,ix(2))))
-[~,p] = ttest(drift_phi(end,:,1,ix(3)), drift_phi(end,:,1,ix(2)))
-[~,p] = ttest(mean(noise_phi(:,:,1,ix(3))), mean(noise_phi(:,:,1,ix(2))))
+[~,p5] = ttest(drift_len(end,:,id,ix(3)), drift_len(end,:,id,ix(2)));
+[~,p6] = ttest(mean(noise_len(:,:,id,ix(3))), mean(noise_len(:,:,id,ix(2))));
+[~,p7] = ttest(drift_phi(end,:,id,ix(3)), drift_phi(end,:,id,ix(2)));
+[~,p8] = ttest(mean(noise_phi(:,:,id,ix(3))), mean(noise_phi(:,:,id,ix(2))));
+
+disp('UTT vs UT')
+disp('Drift')
+disp(['Length: p = ', num2str(p1), ' Angle: p = ', num2str(p3)])
+disp('Noise')
+disp(['Length: p = ', num2str(p2), ' Angle: p = ', num2str(p4)])
+
+disp(' ')
+disp('UTT vs TT')
+disp('Drift')
+disp(['Length: p = ', num2str(p5), ' Angle: p = ', num2str(p7)])
+disp('Noise')
+disp(['Length: p = ', num2str(p6), ' Angle: p = ', num2str(p8)])
+
 
 %% pennation
 PEN.sine.low.UT = squeeze(msdphis([10, 119], :, 2, 1))';
@@ -115,9 +131,9 @@ LEN.pas.fast.UTT = squeeze(mslen(3,:,3))';
 
 %% sinusoidal trials
 algo_1 = 'UTT';
-algo_2 = 'UT';
+algo_2 = 'TT';
 
-y = LEN; % PEN or LEN
+y = PEN; % PEN or LEN
 
 close all
 modelString = 'Acc ~ (Cycle*Algo) + (Range*Algo) + (1|Subject)';
@@ -142,7 +158,7 @@ LM = fitlme(T,modelString)
 algo_1 = 'UTT';
 algo_2 = 'TT';
 
-y = PEN; % PEN or LEN
+y = LEN; % PEN or LEN
 close all
 modelString = 'Acc ~ (Quality*Algo) + (Speed*Algo) + (1|Subject)';
 
@@ -165,7 +181,7 @@ LM = fitlme(T,modelString)
 algo_1 = 'UTT';
 algo_2 = 'UT';
 
-y = PEN; % PEN or LEN
+y = LEN; % PEN or LEN
 
 close all
 modelString = 'Acc ~ (Quality*Algo) + (1|Subject)';

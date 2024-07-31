@@ -5,7 +5,7 @@ clear all; close all; clc
 Tmax    = readmatrix('max_torques.txt');
 Trest   = readmatrix('rest_torques.txt'); 
 
-load('RampTarget.mat','tnew','rampTarget')
+% load('RampTarget.mat','tnew','rampTarget')
 load('MVC_EMG.mat');
 
 %% time series
@@ -22,7 +22,7 @@ Wn = 10 / (.5*fs);
 
 n = 2667;
 tus = 0:.03:((n-1)*.03);
-
+tnew = 0:(1/fs):80;
 angle_rs = nan(n, 8, 3);
 
 for j = 1:length(force_conditions)
@@ -34,7 +34,13 @@ for j = 1:length(force_conditions)
     for p = 1:8
         angle_rs(:,p,j) = interp1(tnew, angle(p,:)', tus,[],'extrap');
     end
+   
+    % get max angle
+    max_angle(:,j) = max(angle,[],2) 
+    min_angle(:,j) = min(angle,[],2) 
 end
+
+mean(max_angle)
 
 %% ultrasound
 Qs = [nan, 0, 10.^(-4:0), 1000, inf];

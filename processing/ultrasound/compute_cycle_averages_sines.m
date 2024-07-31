@@ -4,8 +4,20 @@ clear all; close all; clc
 Tmax    = readmatrix('max_torques.txt');
 Trest   = readmatrix('rest_torques.txt'); 
 
-load('RampTarget.mat','tnew','rampTarget')
+% load('RampTarget.mat','tnew','rampTarget')
 load('MVC_EMG.mat');
+
+dt = 1/100;
+N = 8201;
+tnew = 0:dt:(N-1)*dt;
+
+mainfolder = 'C:\Users\timvd\';
+mainfolder = 'C:\Users\u0167448\';
+usfolder = 'OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+githubfolder =  'Documents\GitHub\RUB_ultrasound_study\data\ultrasound\tracking';
+subfolders = dir([mainfolder, usfolder]);
+% mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
+
 
 %% time series
 force_conditions = {'sine_020','sine_1020'};
@@ -94,12 +106,9 @@ N = 7;
 Qs = [nan, 0, 10.^(-4:0), 1000, inf];
 color = get(gca,'colororder');
 
-mainfolder = 'C:\Users\timvd\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
-% mainfolder = 'C:\Users\u0167448\OneDrive - KU Leuven\8. Ultrasound comparison - TBD\UltraTimTrack_testing\';
-subfolders = dir(mainfolder);
 
 foldernames = {'3011', '0812', '1312','1612','1601','1701','1901a','1901b'};
-filenames = {'*sine_020*.mp4','*sine_1020*.mp4'}; 
+filenames = {'*sine_1020*.mp4','*sine_020*.mp4'}; 
 
 % force_conditions = {'slow','medium','fast','asym','sine_020','sine_1020'};
 
@@ -144,7 +153,7 @@ for i = iis
     end
     
 for k = 1:M
-    cd([mainfolder foldername]);
+    cd([mainfolder usfolder foldername]);
     files = dir(filenames{k});
     vidname = files.name(1:end-4);
 
@@ -152,7 +161,7 @@ for k = 1:M
 %     cd([mainfolder foldername,'\analyzed\mat']);
 
     filename = [vidname,'_tracked_Q=',strrep(num2str(Qs(i)),'.','')];
-    cd([mainfolder foldername,'\Tracked']);
+    cd([mainfolder usfolder foldername,'\Tracked']);
 
     if exist([filename,'.mat'],'file')
         load([filename,'.mat'],'Fdat');
@@ -287,6 +296,6 @@ end
 end
 
 %% save
-cd('C:\Users\timvd\Documents\RUB_ultrasound_study\figures')
-% cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\figures');
+cd([mainfolder, githubfolder])
+
 save('cycle_averages_sines_v2.mat')
