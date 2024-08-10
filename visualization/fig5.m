@@ -1,4 +1,3 @@
-clear all; close all; clc
 load('sines_summary.mat', 'drift_len','drift_phi','noise_len','noise_phi')
 
 n = 1:118;
@@ -10,7 +9,7 @@ drift(:,:,2,:) = drift_phi(:,:,2,:);
 noise = noise_len(:,:,2,:);
 noise(:,:,2,:) = noise_phi(:,:,2,:);
 
-figure(1)
+figure(4)
 color = get(gca,'colororder');
 dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
 M = 2;
@@ -100,7 +99,7 @@ for j = 1:M
 end
 
 %% make nice
-figure(1)
+figure(4)
 set(gcf,'units','normalized','position',[.2 .2 .4 .4])
 
 subplot(241); 

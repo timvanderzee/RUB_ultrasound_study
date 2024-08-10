@@ -1,19 +1,16 @@
-clear all; close all; clc
+close all;
 conditions = {'slow_low', 'slow_high', 'medium_low', 'medium_high', 'fast_low', 'fast_high', 'asym_low', 'asym_high', ...
     'sine_020', 'sine_1020','pas_005', 'pas_30','pas_120'};
 
 torque = nan(8, 8201);
 angle = nan(8,8201);
 
-datafolder = % figshare
-codefolder = % github
-
 for j = 1:length(conditions)
 for i = 1:8
 
     cd([datafolder, '\p',num2str(i),'\MAT data'])
 
-    disp(i)
+%     disp(i)
 
     % first look for version 2, then look for version 1
     if exist([conditions{j},'_03.mat'],'file')
@@ -21,7 +18,6 @@ for i = 1:8
     elseif exist([conditions{j},'_02.mat'],'file')
         load([conditions{j},'_02.mat'])
     elseif exist([conditions{j},'_01.mat'],'file')
-        % load
         load([conditions{j},'_01.mat'])
     else
         disp('Did not find file')
@@ -41,25 +37,25 @@ for i = 1:8
         torque(i,:) = interp1(Torque.times, Tfilt, tnew);
         angle(i,:) = interp1(Angle.times, Afilt, tnew);
 
-        figure(1)
-        subplot(4,2,i)
-        plot(Torque.times, Torque.values); hold on
-        plot(Torque.times, Tfilt,'--')
-        plot(tnew, torque(i,:),'.')
-
-        figure(2)
-        subplot(4,2,i)
-        plot(Angle.times, Angle.values); hold on
-        plot(Angle.times, Afilt,'--')
-        plot(tnew, angle(i,:),'.')
+%         figure(1)
+%         subplot(4,2,i)
+%         plot(Torque.times, Torque.values); hold on
+%         plot(Torque.times, Tfilt,'--')
+%         plot(tnew, torque(i,:),'.')
+% 
+%         figure(2)
+%         subplot(4,2,i)
+%         plot(Angle.times, Angle.values); hold on
+%         plot(Angle.times, Afilt,'--')
+%         plot(tnew, angle(i,:),'.')
 
     end
 
 end
 
 
-cd([codefolder,'\RUB_ultrasound_study\data\torque'])
+cd([codefolder,'\data\torque'])
 
 save([conditions{j},'_summary.mat'],'tnew','torque','angle')
-disp(['Saved: ', conditions{j},'_summary.mat']);
+% disp(['Saved: ', conditions{j},'_summary.mat']);
 end

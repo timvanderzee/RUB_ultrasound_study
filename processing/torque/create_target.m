@@ -1,5 +1,3 @@
-close all; clc
-
 fsnew = 100; 
 tnew = 0:(1/fsnew):82;
 
@@ -25,7 +23,7 @@ for j = 1:4
     rampTarget(j,:) = [repmat(Target,10,1); zeros(201,1)]';
 end
 
-plot(tnew, rampTarget);
+% plot(tnew, rampTarget);
 
-cd([mainfolder, 'RUB_ultrasound_study\data\torque'])
+cd([codefolder, '\data\torque'])
 save('RampTarget.mat')

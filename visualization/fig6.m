@@ -1,6 +1,4 @@
-clear all; close all; clc
-
-figure(1)
+figure(5)
 color = get(gca,'colororder');
 dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
 dcolors = dcolor;
@@ -21,12 +19,8 @@ rmsdlens = msdlens;
 
 load('sines_summary.mat','msdphis','msdlens')
 
-% titles = {'Small','Large','Slow','Medium','Fast','Asymmetric'};
-close all
-
 quals = {'low','high'};
 
-if ishandle(1), close(1); end; figure(1)
 h=tiledlayout(3,24,'TileSpacing','tight','Padding','tight')
 
 js = [1,2,4,5,7,8];
@@ -112,13 +106,10 @@ end
 
 end
 
-
-
-
 %% passive
 load('passive_summary.mat','mspen','mslen')
          dcolor = [color(6,:); color(2,:)+[0 .2 .2]; color(4,:)];
-figure(1)
+figure(5)
 titles = {'Passive: slow', 'Passive: moderate', 'Passive: fast','Passive: slow', 'Passive: moderate', 'Passive: fast'};
 ip = [2, 1, 3];
 for j = 1:6
@@ -156,15 +147,13 @@ for j = 1:6
     
     ylim([0 ymax])
     
-   for m = [2,1,3]
-        i = ix(m);
-            
-        disp([algos{m},': ', num2str(round(mean(X(m,:,J),2),2)), ' - ', num2str(round(std(X(m,:,J),1,2),2))])
-        disp(' ')
-    end           
+%    for m = [2,1,3]
+%         i = ix(m);
+%             
+%         disp([algos{m},': ', num2str(round(mean(X(m,:,J),2),2)), ' - ', num2str(round(std(X(m,:,J),1,2),2))])
+%         disp(' ')
+%     end           
 end
 
-%%
-figure(1)
  set(gcf,'units','normalized','position',[.2 .2 .4 .5])
 

@@ -1,4 +1,4 @@
-close all; clc
+close all; 
 filenames = {'*sine_1020*','*sine_020*'}; 
 
 T = 1/1.5;
@@ -18,9 +18,9 @@ mphis = nan(101, 8, 6, 3);
 mlens = nan(101, 8, 6, 3);
 
 for p = 1:8
-    disp(['p',num2str(p)])
+%     disp(['p',num2str(p)])
     for k = 1:length(filenames)
-        cd([mainfolder, 'RUB_ultrasound_study\data\ultrasound\GM\p', num2str(p)])
+        cd([codefolder, '\data\ultrasound\GM\p', num2str(p)])
         files = dir(filenames{k});
 
         for i = 1:length(files)
@@ -96,5 +96,5 @@ end
 
 
 %% save
-cd([mainfolder, 'RUB_ultrasound_study\data\ultrasound\tracking'])
+cd([codefolder, '\data\ultrasound\tracking'])
 save('sines_summary.mat')

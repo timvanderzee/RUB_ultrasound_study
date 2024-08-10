@@ -1,7 +1,4 @@
-clear all; close all; clc
-
-datafolder = % figshare
-codefolder = % github
+close all;
 
 j = 1;
 
@@ -15,7 +12,7 @@ for k = 1:2
 for i = 1:8
 
     cd([datafolder, '\p',num2str(i),'\MAT data'])
-disp(i)
+% disp(i)
 
 % assume 5 possible version
 nfiles = 0;
@@ -25,7 +22,7 @@ for m = 1:5
         nfiles = nfiles + 1;
 
         load([MVCnames{k},'_0', num2str(m),'.mat'])
-        disp([MVCnames{k},'_0', num2str(m),'.mat'])
+%         disp([MVCnames{k},'_0', num2str(m),'.mat'])
     end
 end
 
@@ -64,47 +61,47 @@ if nfiles > 0
     [MVC.TA(i,k), TAloc] = max(EMG.TA(i,:));
     [MVC.SO(i,k), SOloc] = max(EMG.SO(i,:));
     
-    figure(k*10+1)
-    subplot(4,2,i)
-    plot(MG.times, MG.values); hold on
-    plot(MG.times, abs(MG_filt),'--')
-    plot(MG.times, MG_filtfilt,'--')
-    plot(tnew, EMG.MG(i,:),'.')
-    plot(tnew(MGloc), MVC.MG(i,k),'ro')
-    ylim([-2 2])
-    set(gcf,'name','MG')
-    
-    figure(k*10+2)
-    subplot(4,2,i)
-    plot(LG.times, LG.values); hold on
-    plot(LG.times, LG_filtfilt,'--')
-    plot(tnew, EMG.LG(i,:),'.')
-    plot(tnew(LGloc), MVC.LG(i,k),'ro')
-    ylim([-2 2])
-    set(gcf,'name','LG')
-    
-    figure(k*10+3)
-    subplot(4,2,i)
-    plot(SOL.times, SOL.values); hold on
-    plot(SOL.times, SO_filtfilt,'--')
-    plot(tnew, EMG.SO(i,:),'.')
-    plot(tnew(SOloc), MVC.SO(i,k),'ro')
-    ylim([-2 2])
-    set(gcf,'name','SOL')
-    
-    figure(k*10+4)
-    subplot(4,2,i)
-    plot(TA.times, TA.values); hold on
-    plot(TA.times, TA_filtfilt,'--')
-    plot(tnew, EMG.TA(i,:),'.')
-    plot(tnew(TAloc), MVC.TA(i,k),'ro')
-    ylim([-2 2])
-    set(gcf,'name','TA')
+%     figure(k*10+1)
+%     subplot(4,2,i)
+%     plot(MG.times, MG.values); hold on
+%     plot(MG.times, abs(MG_filt),'--')
+%     plot(MG.times, MG_filtfilt,'--')
+%     plot(tnew, EMG.MG(i,:),'.')
+%     plot(tnew(MGloc), MVC.MG(i,k),'ro')
+%     ylim([-2 2])
+%     set(gcf,'name','MG')
+%     
+%     figure(k*10+2)
+%     subplot(4,2,i)
+%     plot(LG.times, LG.values); hold on
+%     plot(LG.times, LG_filtfilt,'--')
+%     plot(tnew, EMG.LG(i,:),'.')
+%     plot(tnew(LGloc), MVC.LG(i,k),'ro')
+%     ylim([-2 2])
+%     set(gcf,'name','LG')
+%     
+%     figure(k*10+3)
+%     subplot(4,2,i)
+%     plot(SOL.times, SOL.values); hold on
+%     plot(SOL.times, SO_filtfilt,'--')
+%     plot(tnew, EMG.SO(i,:),'.')
+%     plot(tnew(SOloc), MVC.SO(i,k),'ro')
+%     ylim([-2 2])
+%     set(gcf,'name','SOL')
+%     
+%     figure(k*10+4)
+%     subplot(4,2,i)
+%     plot(TA.times, TA.values); hold on
+%     plot(TA.times, TA_filtfilt,'--')
+%     plot(tnew, EMG.TA(i,:),'.')
+%     plot(tnew(TAloc), MVC.TA(i,k),'ro')
+%     ylim([-2 2])
+%     set(gcf,'name','TA')
 end
 end
 
 end
 
-cd([codefolder,'RUB_ultrasound_study\data\emg'])
+cd([codefolder,'\data\emg'])
 save('MVC_EMG.mat','tnew','MVC')
 

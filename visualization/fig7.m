@@ -1,5 +1,3 @@
-clear all; close all; clc
-
 dt = 1/30;
 
 load('exampleVideoTA_Verheul_2022_tracked_Q=0001.mat')
@@ -36,6 +34,7 @@ Pangle = Fangle - Aangle;
 
 j = 1:2:20;
 
+figure(6)
 for i = 1:3
 subplot(3,2,j(i))
 plot(ts, mean(Flength,2),'color',[.5 .5 .5],'linewidth',2); hold on
@@ -51,7 +50,6 @@ end
 color = get(gca,'colororder')
 
 %% UTT
-figure(1)
 subplot(321)
 plot(t, FL,'linewidth',2,'color',color(4,:)); hold on
 title('UltraTimTrack: fascicle length')
@@ -141,6 +139,6 @@ end
 
 
 %% 
-figure(1)
+figure(6)
 set(gcf,'units','normalized','position',[.1 .1 .35 .6])
 

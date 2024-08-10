@@ -1,4 +1,3 @@
-close all; clc
 % typical example participant, torques, angles, EMGs
 % for passive trials
 
@@ -9,11 +8,11 @@ load('MVC_EMG.mat', 'MVC', 'tnew');
 
 %% time series
 force_conditions = {'pas_005', 'pas_30','pas_120'};
-p = 1;
+p = 5;
 
 titles = {'Slow passive', 'Medium passive', 'Fast passive'};
 
-figure(1)
+figure(3)
 color = get(gca,'colororder');
 N = 7;
 M = length(force_conditions);
@@ -94,7 +93,7 @@ filenames = {'*pas_005*','*pas_30*','*pas_120*'};
 dcolor = [color(2,:)+[0 .2 .2]; color(6,:); color(4,:)];
 
 for k = 1:length(filenames)
-    cd([mainfolder, 'RUB_ultrasound_study\data\ultrasound\GM\p1'])
+    cd([codefolder, '\data\ultrasound\GM\p1'])
     files = dir(filenames{k});
 
     for i = 1:length(files)
@@ -128,7 +127,7 @@ for i = 1:(length(force_conditions)*N)
     xlim([0 16])
 end
 
-figure(1)
+figure(3)
 set(gcf,'units','normalized','position',[0 0 .4 .99])
 
 subplot(N,3,1); ylabel('Angle (deg)')

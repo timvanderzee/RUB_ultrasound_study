@@ -1,4 +1,4 @@
-close all; clc
+close all; 
 
 v = 10; % number of contraction
 msdphis = nan(v, 8, 6, 3,2);
@@ -9,7 +9,7 @@ mphis = nan(101, 8, 6, 3,2);
 mlens = nan(101, 8, 6, 3,2);
 
 for p = 1:8
-    disp(['p',num2str(p)])
+%     disp(['p',num2str(p)])
 for j = 1:2
     if j == 1
         filenames = {'*slow_low*','*medium_low*','*fast_low*','*asym_low*'}; 
@@ -20,7 +20,7 @@ for j = 1:2
     end
     
 for k = 1:length(filenames)
-    cd([mainfolder, 'RUB_ultrasound_study\data\ultrasound\GM\p', num2str(p)])
+    cd([codefolder, '\data\ultrasound\GM\p', num2str(p)])
     files = dir(filenames{k});
 
     for i = 1:length(files)
@@ -101,5 +101,5 @@ end
 end
 
 %% save
-cd([mainfolder, 'RUB_ultrasound_study\data\ultrasound\tracking'])
+cd([codefolder, '\data\ultrasound\tracking'])
 save('ramp_summary.mat','msdphis','mtsus','mphis','mlens','msdlens')

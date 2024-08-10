@@ -1,5 +1,3 @@
-clear all; close all; clc
-
 dt = 1/30;
 
 Qs = [(.0001:.0001:.001) .002 .003 .004 .005 .01 .1 1 10 100 1000];
@@ -66,8 +64,7 @@ t = 0:dt:((N-1)*dt);
 HRMSE = [sqrt(mean((FL(FasData.digitizedFrames)' - mean(Flength,2)).^2,'omitnan')) sqrt(mean((PEN(FasData.digitizedFrames)' - mean(Pangle,2)).^2,'omitnan'))]
 
 %%
-if ishandle(1), close(1); end
-figure(1)
+figure(7)
 subplot(121);
 semilogx(Qs, RMSE(:,1),'linewidth',2); hold on
 plot([min(Qs) max(Qs)], [HRMSE(1) HRMSE(1)],'k-')   

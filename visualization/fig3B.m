@@ -1,4 +1,3 @@
-close all; clc
 % typical example participant, torques, angles, EMGs
 % for all trials except passive
 
@@ -24,7 +23,7 @@ i = 2;
 
 titles = {'Slow ramp', 'Medium ramp', 'Fast ramp', 'Asymmetric ramp'};
 
-figure(1)
+figure(2)
 color = get(gca,'colororder');
 N = 7;
 M = length(force_conditions);
@@ -95,7 +94,7 @@ filenames = {'*slow_high*','*medium_high*','*fast_high*','*asym_high*'};
 dcolor = [color(2,:)+[0 .2 .2]; color(6,:); color(4,:)];
 
 for k = 1:length(filenames)
-    cd([mainfolder, 'RUB_ultrasound_study\data\ultrasound\GM\p1'])
+    cd([codefolder, '\data\ultrasound\GM\p1'])
     files = dir(filenames{k});
 
     for i = 1:length(files)
@@ -130,7 +129,7 @@ end
 
 %%
 % set(gcf,'units','normalized','position',[.2 0 .2 .9])
-figure(1)
+figure(2)
 set(gcf,'units','normalized','position',[0 0 .4 .99])
 
 subplot(N,M,1); ylabel('Torque (N-m)')

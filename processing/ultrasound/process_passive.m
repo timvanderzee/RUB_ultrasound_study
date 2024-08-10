@@ -1,4 +1,4 @@
-close all; clc
+close all; 
 force_conditions = {'pas_005', 'pas_30','pas_120'};
 
 fs = 100;
@@ -22,7 +22,7 @@ for j = 1:length(force_conditions)
     min_angle(:,j) = min(angle,[],2);
 end
 
-mean(max_angle)
+% mean(max_angle)
 
 %% ultrasound
 filenames = {'*pas_005*','*pas_30*','*pas_120*'};
@@ -34,7 +34,7 @@ len = nan(nn, 8, 3, 3);
 for p = 1:8
     
     for k = 1:length(filenames)
-        cd([mainfolder, 'RUB_ultrasound_study\data\ultrasound\GM\p', num2str(p)])
+        cd([codefolder, '\data\ultrasound\GM\p', num2str(p)])
         files = dir(filenames{k});
 
         for i = 1:length(files)
@@ -51,6 +51,11 @@ for p = 1:8
             else
                 disp('Does not exist')
             end
+            
+%             figure(100+p);
+%             subplot(1,3,k);
+%             plot(angle_rs(:,p,k), pen(:,p,k,i),'.'); hold on
+%             
 
 
         end
@@ -101,5 +106,5 @@ for a = 1:3
 end
 
 %% save
-cd([mainfolder, 'RUB_ultrasound_study\data\ultrasound\tracking'])
+cd([codefolder, '\data\ultrasound\tracking'])
 save('passive_summary.mat')

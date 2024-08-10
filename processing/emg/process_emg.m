@@ -1,10 +1,7 @@
-clear all; close all; clc
+close all;
 
 conditions = {'slow_low', 'slow_high', 'medium_low', 'medium_high', 'fast_low', 'fast_high', 'asym_low', 'asym_high', ...
     'sine_020', 'sine_1020','pas_005', 'pas_30','pas_120'};
-
-datafolder = % figshare
-codefolder = % github
 
 for j = 1:length(conditions)
 % 
@@ -13,7 +10,7 @@ for j = 1:length(conditions)
 for i = 1:8
 
     cd([datafolder, '\p',num2str(i),'\MAT data'])
-disp(i)
+% disp(i)
 
 % first look for version 2, then look for version 1
 if exist([conditions{j},'_02.mat'],'file')
@@ -64,8 +61,8 @@ end
 
 end
 
-cd([codefolder,'RUB_ultrasound_study\data\emg'])
+cd([codefolder,'\data\emg'])
 save([conditions{j},'_EMG.mat'],'tnew','EMG')
-disp(['Saved: ', conditions{j},'_EMG.mat']);
+% disp(['Saved: ', conditions{j},'_EMG.mat']);
 
 end

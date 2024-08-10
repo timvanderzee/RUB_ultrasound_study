@@ -1,4 +1,3 @@
-close all; clc
 % typical example participant, torques, angles, EMGs
 % for all trials except passive
 
@@ -10,9 +9,6 @@ load('MVC_EMG.mat', 'MVC', 'tnew');
 
 %% time series
 force_conditions = {'sine_020','sine_1020'};
-image_qualities = {'low', 'high'};
-i = 2;
-
 p = 1;
 titles = {'Large range (0-20% MVC)','Small range (10-20% MVC)'};
 
@@ -26,10 +22,10 @@ c = [.1 .1; .15 .05];
 for j = 1:M
     
 % load
-load([force_conditions{j},'_',image_qualities{i},'_summary.mat'], 'torque')
+load([force_conditions{j},'_summary.mat'], 'torque')
 
 % load
-load([force_conditions{j},'_',image_qualities{i},'_EMG.mat'], 'EMG')
+load([force_conditions{j},'_EMG.mat'], 'EMG')
 
 % subtract rest torque, divide by MVC torque, multiply by 100%
 MGrel = EMG.MG.raw ./ max(MVC.MG,[],2) * 100;
@@ -91,7 +87,7 @@ filenames = {'*sine_020*','*sine_1020*'};
 dcolor = [color(2,:)+[0 .2 .2]; color(6,:); color(4,:)];
 
 for k = 1:length(filenames)
-    cd([mainfolder, 'RUB_ultrasound_study\data\ultrasound\GM\p1'])
+    cd([codefolder, '\data\ultrasound\GM\p1'])
     files = dir(filenames{k});
 
     for i = 1:length(files)
