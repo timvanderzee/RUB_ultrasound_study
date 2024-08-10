@@ -1,8 +1,6 @@
 clear all; close all; clc
-% cd('C:\Users\timvd\Documents\RUB_ultrasound_study')
 Tmax    = readmatrix('max_torques.txt');
 Trest   = readmatrix('rest_torques.txt'); 
-
 load('RampTarget.mat','tnew','rampTarget')
 
 %% ramp conditions

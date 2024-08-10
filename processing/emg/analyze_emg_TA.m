@@ -1,6 +1,4 @@
 clear all; close all; clc
-% look at TA specifically as it looked weird
-
 load('MVC_EMG.mat');
 
 

@@ -1,4 +1,4 @@
-clear all; close all; clc
+close all; clc
 
 fsnew = 100; 
 tnew = 0:(1/fsnew):82;
@@ -27,4 +27,5 @@ end
 
 plot(tnew, rampTarget);
 
+cd([mainfolder, 'RUB_ultrasound_study\data\torque'])
 save('RampTarget.mat')

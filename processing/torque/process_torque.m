@@ -1,22 +1,17 @@
 clear all; close all; clc
-
-dates = {'3011', '0812', '1312', '1612', '1601', '1701', '1901a', '1901b'};
-
 conditions = {'slow_low', 'slow_high', 'medium_low', 'medium_high', 'fast_low', 'fast_high', 'asym_low', 'asym_high', ...
     'sine_020', 'sine_1020','pas_005', 'pas_30','pas_120'};
 
 torque = nan(8, 8201);
 angle = nan(8,8201);
 
-j = 1;
-mainfolder = 'C:\Users\timvd\';
-onedrivefolder = [mainfolder, 'OneDrive - KU Leuven\8. Ultrasound comparison - TBD\data\Test'];
-githubfolder = [mainfolder, 'Documents\RUB_ultrasound_study'];
+datafolder = % figshare
+codefolder = % github
 
 for j = 1:length(conditions)
-for i = 1:length(dates)
+for i = 1:8
 
-    cd([onedrivefolder, dates{i},'\MAT data'])
+    cd([datafolder, '\p',num2str(i),'\MAT data'])
 
     disp(i)
 
@@ -62,7 +57,9 @@ for i = 1:length(dates)
 
 end
 
-cd([githubfolder,'\torque\summary_data'])
+
+cd([codefolder,'\RUB_ultrasound_study\data\torque'])
+
 save([conditions{j},'_summary.mat'],'tnew','torque','angle')
 disp(['Saved: ', conditions{j},'_summary.mat']);
 end

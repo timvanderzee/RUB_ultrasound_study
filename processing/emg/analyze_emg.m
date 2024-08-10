@@ -1,7 +1,5 @@
 clear all; close all; clc
-% cd('C:\Users\timvd\Documents\RUB_ultrasound_study')
 load('MVC_EMG.mat');
-% Trest   = readmatrix('rest_EMGs.txt'); 
 
 %% ramp conditions
 force_conditions = {'slow','medium','fast','asym'};

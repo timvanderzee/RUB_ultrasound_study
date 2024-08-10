@@ -1,7 +1,7 @@
 clear all; close all; clc
 
-dates = {'3011', '0812', '1312', '1612', '1601', '1701', '1901a', '1901b'};
-datafolder = 'C:\Users\timvd\OneDrive - University of Calgary\8. Ultrasound comparison - TBD\data';
+datafolder = % figshare
+codefolder = % github
 
 j = 1;
 
@@ -12,9 +12,9 @@ MVCnames = {'MVC', 'MVCdf'};
 MVC = struct('MG',nan(8,2),'LG',nan(8,2),'SO',nan(8,2),'TA',nan(8,2));
 
 for k = 1:2
-for i = 1:length(dates)
+for i = 1:8
 
-cd([datafolder, '\Test', dates{i}])
+    cd([datafolder, '\p',num2str(i),'\MAT data'])
 disp(i)
 
 % assume 5 possible version
@@ -105,6 +105,6 @@ end
 
 end
 
-cd('C:\Users\timvd\Documents\RUB_ultrasound_study\emg\summary_data')
+cd([codefolder,'RUB_ultrasound_study\data\emg'])
 save('MVC_EMG.mat','tnew','MVC')
 
