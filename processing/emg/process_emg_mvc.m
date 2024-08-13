@@ -11,7 +11,7 @@ MVC = struct('MG',nan(8,2),'LG',nan(8,2),'SO',nan(8,2),'TA',nan(8,2));
 for k = 1:2
 for i = 1:8
 
-    cd([datafolder, '\p',num2str(i),'\MAT data'])
+    cd([datafolder, '\dynamometry\p',num2str(i),'\MAT data'])
 % disp(i)
 
 % assume 5 possible version

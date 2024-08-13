@@ -93,7 +93,7 @@ filenames = {'*pas_005*','*pas_30*','*pas_120*'};
 dcolor = [color(2,:)+[0 .2 .2]; color(6,:); color(4,:)];
 
 for k = 1:length(filenames)
-    cd([codefolder, '\data\ultrasound\GM\p1'])
+    cd([datafolder, '\fascicle_tracking_estimates\p1'])
     files = dir(filenames{k});
 
     for i = 1:length(files)

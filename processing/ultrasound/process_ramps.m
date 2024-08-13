@@ -20,7 +20,7 @@ for j = 1:2
     end
     
 for k = 1:length(filenames)
-    cd([codefolder, '\data\ultrasound\GM\p', num2str(p)])
+    cd([datafolder, '\fascicle_tracking_estimates\p', num2str(p)])
     files = dir(filenames{k});
 
     for i = 1:length(files)

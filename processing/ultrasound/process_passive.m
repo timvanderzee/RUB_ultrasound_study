@@ -34,7 +34,7 @@ len = nan(nn, 8, 3, 3);
 for p = 1:8
     
     for k = 1:length(filenames)
-        cd([codefolder, '\data\ultrasound\GM\p', num2str(p)])
+        cd([datafolder, '\fascicle_tracking_estimates\p', num2str(p)])
         files = dir(filenames{k});
 
         for i = 1:length(files)

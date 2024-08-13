@@ -9,7 +9,7 @@ for j = 1:length(conditions)
 
 for i = 1:8
 
-    cd([datafolder, '\p',num2str(i),'\MAT data'])
+    cd([datafolder, '\dynamometry\p',num2str(i),'\MAT data'])
 % disp(i)
 
 % first look for version 2, then look for version 1

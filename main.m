@@ -1,7 +1,7 @@
 clear all; close all; clc
 
-datafolder = % should end with "figshare"
-codefolder = % shouldn end with "RUB_ultrasound_study"
+datafolder = 'C:\Users\u0167448\Desktop\data'% should contain folders downloaded from figshare
+codefolder = 'C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study'% should end with "RUB_ultrasound_study"
 addpath(genpath(codefolder));
 
 %% torque
