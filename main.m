@@ -1,8 +1,14 @@
 clear all; close all; clc
 
-datafolder = 'C:\Users\u0167448\Desktop\data'% should contain folders downloaded from figshare
-codefolder = 'C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study'% should end with "RUB_ultrasound_study"
+%% get paths
+datafolder = uigetdir('','Find the folder where the two figshare subfolders were unzipped and select it')
+codefolder = uigetdir('','Find the RUB_ultrasound_study folder and select it')
 addpath(genpath(codefolder));
+
+%% create missing folder
+if ~exist([codefolder '\data\emg'], 'dir')
+       mkdir([codefolder '\data\emg'])
+end
 
 %% torque
 disp('Processing torque ...')
