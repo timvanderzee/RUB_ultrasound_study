@@ -62,7 +62,7 @@ RMSE = [sqrt(mean((FL(FasData.digitizedFrames)' - mean(Flength,2)).^2,'omitnan')
 
 
 %% Hybrid Track
-load('exampleVideoTA_trackingResults.mat')
+load('exampleVideoTA_trackingResults.mat', 'Hybrid')
 
 N = 601;
 clear FL PEN
