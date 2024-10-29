@@ -106,5 +106,9 @@ for a = 1:3
 end
 
 %% save
+if ~isfolder([codefolder, '\data\ultrasound\tracking'])
+    mkdir([codefolder, '\data\ultrasound\tracking'])
+end
+
 cd([codefolder, '\data\ultrasound\tracking'])
 save('passive_summary.mat')

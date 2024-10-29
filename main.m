@@ -32,6 +32,7 @@ fig3A
 fig3B
 fig4
 fig5
-fig6
+fig6_v2 % need 3 figures because of svg
 fig7
+fig8
 figS1

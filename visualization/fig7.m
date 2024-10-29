@@ -6,9 +6,9 @@ N = length(Fdat.Region.PEN);
 t = 0:dt:((N-1)*dt);
 pixpermm =  13.6;
 
-ANG = Fdat.Region.ANG;
-PEN = Fdat.Region.PEN;
-FL = Fdat.Region.FL;
+
+%% Hybrid Track: settings
+load('exampleVideoTA_trackingResults.mat','settings')
 
 %% manual tracking
 obs = {'TZ', 'PT', 'BR'};
@@ -19,22 +19,39 @@ Flength = nan(101,3);
 Aangle = nan(101,3);
 
 for i = 1:length(obs)
-    load(['Manual_Tracking_',obs{i},'.mat'])
+cd('C:\Users\u0167448\Documents\GitHub\RUB_ultrasound_study\data\ultrasound\TA_video\manual')
+    load(['Manual_Tracking_',obs{i},'.mat'],'FasData','ApoData')
     
     [ts, id] = sort(t(FasData.digitizedFrames));
     
-    FasData.FAngle(FasData.FAngle<0) = FasData.FAngle(FasData.FAngle<0) + 180;
+%     FasData.FAngle(FasData.FAngle<0) = FasData.FAngle(FasData.FAngle<0) + 180;
     
-    Fangle(1:length(id),i) = FasData.FAngle(id)';
-    Aangle(1:length(id),i) = ApoData.Angle(id)';
-    Flength(1:length(id),i) = FasData.FLength(id)'/pixpermm;
+%     Fangle(1:length(id),i) = FasData.FAngle(id)';
+%     Aangle(1:length(id),i) = ApoData.Angle(id)';
+%     Flength(1:length(id),i) = FasData.FLength(id)'/pixpermm;
+
+    % recalc stuff (because of different horizontal and vertical pixtomm)
+    for j = 1:length(id)
+        fas_dX = (FasData.pts{id(j)}(2,1) - FasData.pts{id(j)}(1,1)) / settings.horzmm;
+        fas_dY = (FasData.pts{id(j)}(2,2) - FasData.pts{id(j)}(1,2)) / settings.vertmm;
+
+        apo_dX = (ApoData.pts{id(j)}(2,1) - ApoData.pts{id(j)}(1,1)) / settings.horzmm;
+        apo_dY = (ApoData.pts{id(j)}(2,2) - ApoData.pts{id(j)}(1,2)) / settings.vertmm;
+
+        Flength(j,i) = sqrt(fas_dX^2 + fas_dY^2);
+        Fangle(j,i) = atan2d(fas_dY, fas_dX);
+        Aangle(j,i) = atan2d(apo_dY, apo_dX);
+    end
+
+    Fangle(Fangle<0) = Fangle(Fangle<0) + 180;
+%     fasA(fasA<0) = fasA(fasA<0) + 180;
 end
 
 Pangle = Fangle - Aangle;
 
 j = 1:2:20;
 
-figure(6)
+figure(8)
 for i = 1:3
 subplot(3,2,j(i))
 plot(ts, mean(Flength,2),'color',[.5 .5 .5],'linewidth',2); hold on
@@ -50,6 +67,11 @@ end
 color = get(gca,'colororder')
 
 %% UTT
+load('exampleVideoTA_Verheul_2022_tracked_Q=0001.mat')
+ANG = Fdat.Region.ANG;
+PEN = Fdat.Region.PEN;
+FL = Fdat.Region.FL;
+
 subplot(321)
 plot(t, FL,'linewidth',2,'color',color(4,:)); hold on
 title('UltraTimTrack: fascicle length')
@@ -58,7 +80,23 @@ subplot(322)
 plot(t, PEN,'linewidth',2,'color',color(4,:)); hold on
 title('UltraTimTrack: fascicle angle')
 
-RMSE = [sqrt(mean((FL(FasData.digitizedFrames)' - mean(Flength,2)).^2,'omitnan')) sqrt(mean((PEN(FasData.digitizedFrames)' - mean(Pangle,2)).^2,'omitnan'))]
+RMSE(1,:) = [sqrt(mean((FL(FasData.digitizedFrames)' - mean(Flength,2)).^2,'omitnan')) sqrt(mean((PEN(FasData.digitizedFrames)' - mean(Pangle,2)).^2,'omitnan'))]
+
+%% UTT v2
+load('exampleVideoTA_tracked_Q=0001_shifted.mat')
+ANG = Fdat.Region.ANG;
+PEN = Fdat.Region.PEN;
+FL = Fdat.Region.FL;
+
+subplot(321)
+plot(t, FL,':','linewidth',1,'color',color(4,:)); hold on
+title('UltraTimTrack: fascicle length')
+
+subplot(322)
+plot(t, PEN,':','linewidth',1,'color',color(4,:)); hold on
+title('UltraTimTrack: fascicle angle')
+
+RMSE(2,:) = [sqrt(mean((FL(FasData.digitizedFrames)' - mean(Flength,2)).^2,'omitnan')) sqrt(mean((PEN(FasData.digitizedFrames)' - mean(Pangle,2)).^2,'omitnan'))]
 
 
 %% Hybrid Track
@@ -81,7 +119,7 @@ subplot(323)
 plot(t, FL,'linewidth',2,'color',color(6,:))
 title('HybridTrack: fascicle length')
 
-RMSE = [sqrt(mean((FL(FasData.digitizedFrames)' - mean(Flength,2)).^2,'omitnan')) sqrt(mean((PEN(FasData.digitizedFrames)' - mean(Pangle,2)).^2,'omitnan'))]
+RMSE(3,:) = [sqrt(mean((FL(FasData.digitizedFrames)' - mean(Flength,2)).^2,'omitnan')) sqrt(mean((PEN(FasData.digitizedFrames)' - mean(Pangle,2)).^2,'omitnan'))]
 
 
 %% DL_track
@@ -111,7 +149,7 @@ subplot(325)
 plot(t, FL,'color',color(5,:))
 title('DL Track: fascicle length')
 
-RMSE = [sqrt(mean((FL(FasData.digitizedFrames)' - mean(Flength,2)).^2,'omitnan')) sqrt(mean((PEN(FasData.digitizedFrames)' - mean(Pangle,2)).^2,'omitnan'))]
+RMSE(4,:) = [sqrt(mean((FL(FasData.digitizedFrames)' - mean(Flength,2)).^2,'omitnan')) sqrt(mean((PEN(FasData.digitizedFrames)' - mean(Pangle,2)).^2,'omitnan'))]
 
 %% make nice
 for i = 1:6
@@ -139,6 +177,6 @@ end
 
 
 %% 
-figure(6)
+figure(8)
 set(gcf,'units','normalized','position',[.1 .1 .35 .6])
 
